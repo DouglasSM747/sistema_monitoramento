@@ -4,12 +4,36 @@ module.exports = function (application) {
         application.server.controllers.filial.getCompra(application, request, response);
     });
 
+    application.get('/pdv/info/', function (request, response) {
+        application.server.controllers.filial.getInfo(application, request, response);
+    });
+
+    application.post('/pdv/saveinfo/', function (request, response) {
+        application.server.controllers.filial.saveInfo(application, request, response);
+    });
+
     application.get('/produtos/get/', function (request, response) {
         application.server.controllers.filial.getProdutos(application, request, response);
     });
 
     application.get('/estoque/get/', function (request, response) {
         application.server.controllers.filial.getEstoque(application, request, response);
+    });
+
+    application.post('/estoque/deleteL/', function (request, response) {
+        application.server.controllers.filial.deleteProdutoL(application, request, response);
+    });
+
+    application.post('/estoque/deleteF/', function (request, response) {
+        application.server.controllers.filial.deleteProdutoF(application, request, response);
+    });
+
+    application.post('/estoque/addproduto/', function (request, response) {
+        application.server.controllers.filial.addProduto(application, request, response);
+    });
+
+    application.post('/estoque/updateproduto/', function (request, response) {
+        application.server.controllers.filial.updateProduto(application, request, response);
     });
 
     application.post('/filial/post/', function (request, response) {

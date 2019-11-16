@@ -18,7 +18,7 @@ const routes = [
   {
     path: "/",
     component: DashboardLayout,
-    redirect: "/dashboard",
+    redirect: "/compras",
     children: [
       {
         path: "estoque",
@@ -36,36 +36,38 @@ const routes = [
         component: Produtos
       },
       {
-        path: "dashboard",
-        name: "dashboard",
-        component: Dashboard
+        path: "profile",
+        name: "informacao",
+        component: Profile
+      }
+    ],
+  },
+  {
+    path: "/funcionario",
+    component: DashboardLayout,
+    redirect: "/compras",
+    children: [
+      {
+        path: "estoque",
+        name: "estoque",
+        component: Estoque
+      },
+      {
+        path: "compras",
+        name: "compras",
+        component: Compra
+      },
+      {
+        path: "produtos",
+        name: "produtos",
+        component: Produtos
       },
       {
         path: "profile",
-        name: "profile",
+        name: "informacao",
         component: Profile
       },
-      {
-        path: "notifications",
-        name: "notifications",
-        component: Notifications
-      },
-      {
-        path: "icons",
-        name: "icons",
-        component: Icons
-      },
-      {
-        path: "maps",
-        name: "maps",
-        component: Maps
-      },
-      {
-        path: "typography",
-        name: "typography",
-        component: Typography
-      }
-    ]
+    ],
   },
   { path: "*", component: NotFound },
 ];

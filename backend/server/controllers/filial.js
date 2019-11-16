@@ -1,81 +1,100 @@
-module.exports.getCompra = function(application, request, response) {
+module.exports.getCompra = function (application, request, response) {
 
     if (request.method == 'GET') {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
         var idpdv = request.query.idpdv;
-        filialModel.getCompra(idpdv,function(error, result) {
+        filialModel.getCompra(idpdv, function (error, result) {
             if (!result) {
-                response.send({success: true, response: false});
+                response.send({ success: true, response: false });
                 filialModel._connection.end();
-            } 
+            }
             else {
-                response.send({success: true, response: result});
+                response.send({ success: true, response: result });
                 filialModel._connection.end();
             }
         });
     }
 }
 
-module.exports.getEstoque = function(application, request, response) {
+module.exports.getInfo = function (application, request, response) {
+
+    if (request.method == 'GET') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+        var idpdv = request.query.idpdv;
+        filialModel.getInfo(idpdv, function (error, result) {
+            if (!result) {
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+
+module.exports.getEstoque = function (application, request, response) {
 
     if (request.method == 'GET') {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
         var idpdv1 = request.query.idpdv;
-        filialModel.getEstoque(idpdv1,function(error, result) {
+        filialModel.getEstoque(idpdv1, function (error, result) {
             if (!result) {
-                response.send({success: true, response: false});
+                response.send({ success: true, response: false });
                 filialModel._connection.end();
-            } 
+            }
             else {
-                response.send({success: true, response: result});
+                response.send({ success: true, response: result });
                 filialModel._connection.end();
             }
         });
     }
 }
 
-module.exports.getProdutos = function(application, request, response) {
+module.exports.getProdutos = function (application, request, response) {
 
     if (request.method == 'GET') {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
         var idcompra = request.query.idcompra;
-        filialModel.getProdutos(idcompra,function(error, result) {
+        filialModel.getProdutos(idcompra, function (error, result) {
             if (!result) {
-                response.send({success: true, response: false});
+                response.send({ success: true, response: false });
                 filialModel._connection.end();
-            } 
+            }
             else {
-                response.send({success: true, response: result});
+                response.send({ success: true, response: result });
                 filialModel._connection.end();
             }
         });
     }
 }
 
-module.exports.simpleSearchFilial = function(application, request, response) {
+module.exports.simpleSearchFilial = function (application, request, response) {
 
     if (request.method == 'GET') {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
         var nome = request.query.pesquisa;
 
-        filialModel.simpleSearchFilial(nome, function(error, result) {
+        filialModel.simpleSearchFilial(nome, function (error, result) {
             if (!result) {
-                response.send({success: true, response: false});
+                response.send({ success: true, response: false });
                 filialModel._connection.end();
-            } 
+            }
             else {
-                response.send({success: true, response: result});
+                response.send({ success: true, response: result });
                 filialModel._connection.end();
             }
         });
     }
 }
 
-module.exports.advancedSearchFilial = function(application, request, response) {
+module.exports.advancedSearchFilial = function (application, request, response) {
 
     if (request.method == 'GET') {
         var connection = application.config.dbConnection();
@@ -85,21 +104,21 @@ module.exports.advancedSearchFilial = function(application, request, response) {
             tributacao: parseInt(request.query.trib),
             ordem: request.query.ordem,
             bairro: request.query.bairro,
-        } 
-        filialModel.advancedSearchFilial(params, function(error, result) {
+        }
+        filialModel.advancedSearchFilial(params, function (error, result) {
             if (!result) {
-                response.send({success: true, response: false});
+                response.send({ success: true, response: false });
                 filialModel._connection.end();
-            } 
+            }
             else {
-                response.send({success: true, response: result});
+                response.send({ success: true, response: result });
                 filialModel._connection.end();
             }
         });
     }
 }
 
-module.exports.updateFilial = function(application, request, response) {
+module.exports.updateFilial = function (application, request, response) {
     if (request.method == 'POST') {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
@@ -126,13 +145,142 @@ module.exports.updateFilial = function(application, request, response) {
             longitude: parseFloat(request.body.longitude)
         };
 
-        filialModel.updateFilial(params, function(error, result) {
+        filialModel.updateFilial(params, function (error, result) {
             if (!result) {
-                response.send({success: true, response: false});
+                response.send({ success: true, response: false });
                 filialModel._connection.end();
-            } 
+            }
             else {
-                response.send({success: true, response: result});
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+
+module.exports.deleteProdutoL = function (application, request, response) {
+    if (request.method == 'POST') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+        var idpdv = request.query.idpdv;
+        var id_produto = request.query.idproduto;
+
+        filialModel.deleteProdutoL(idpdv, id_produto, function (error, result) {
+            if (!result) {
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+
+module.exports.deleteProdutoF = function (application, request, response) {
+    if (request.method == 'POST') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+        var idpdv = request.query.idpdv;
+        var id_produto = request.query.idproduto;
+        filialModel.deleteProdutoF(idpdv, id_produto, function (error, result) {
+            if (!result) {
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+
+
+module.exports.addProduto = function (application, request, response) {
+    if (request.method == 'POST') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+
+        var params = {
+            fk2_idPDV: parseInt(request.body.idpdv),
+            quantidade_estoque: parseInt(request.body.quantidade),
+            id_produto: parseInt(request.body.idproduto),
+            nome_produto: request.body.nome,
+            valor: parseInt(request.body.valor),
+            status: parseInt(request.body.status),
+        };
+
+
+        filialModel.addProduto(params, function (error, result) {
+            if (!result) {
+                console.log(error);
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+module.exports.saveInfo = function (application, request, response) {
+    if (request.method == 'POST') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+
+        var params = {
+            nomepdv: request.body.nomepdv,
+            nota: request.body.nota,
+            localizacao: request.body.localizacao,
+            nome_dono_PDV: request.body.nome_dono_PDV,
+            data_fundacao: request.body.data_fundacao,
+            preco_medio: request.body.preco_medio,
+            CESP: request.body.nomepdv,
+            telefone_fixo: request.body.telefone_fixo,
+            informacoes_PDVcol: request.body.informacoes_PDVcol,
+            fk_id_PDV: request.body.atual_pdv
+        };
+
+
+        filialModel.saveInfo(params, function (error, result) {
+            if (!result) {
+                console.log(error);
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+module.exports.updateProduto = function (application, request, response) {
+    if (request.method == 'POST') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+
+        var params = {
+            fk2_idPDV: parseInt(request.body.idpdv),
+            quantidade_estoque: parseInt(request.body.quantidade),
+            id_produto: parseInt(request.body.idproduto),
+            nome_produto: request.body.nome,
+            valor: parseInt(request.body.valor),
+            status: parseInt(request.body.status),
+        };
+
+
+        filialModel.updateProduto(params, function (error, result) {
+            if (!result) {
+                console.log(error);
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
                 filialModel._connection.end();
             }
         });

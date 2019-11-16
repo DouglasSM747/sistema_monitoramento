@@ -1,20 +1,46 @@
 function FilialDAO(connection) {
     this._connection = connection;
 }
-  
+//Buscar compras feitas em um pdv
 FilialDAO.prototype.getCompra = function(idpdv,callback) {
 	this._connection.query('SELECT * FROM teste.compra WHERE fk_id_pdv_occorrente = '+idpdv, callback);
 };
-
+//Buscar informacao de um pdv
+FilialDAO.prototype.getInfo = function(idpdv,callback) {
+	this._connection.query('SELECT * FROM informacoes_pdv WHERE fk_id_PDV = '+idpdv, callback);
+};
+//Salva informacao de um pdv
+FilialDAO.prototype.saveInfo = function(params,callback) {
+	this._connection.query('UPDATE informacoes_pdv SET localizacao = "'+params.localizacao+'",nota =  "'+
+	params.nota+'",informacoes_PDVcol =  "'+params.informacoes_PDVcol+'",data_fundacao = "'+params.data_fundacao+'", preco_medio = "'+params.preco_medio+'",CESP = "'+params.CESP+'", telefone_fixo = "'+params.telefone_fixo+'", nome_dono_PDV = "'+params.nome_dono_PDV+'", nomepdv = "'+params.nomepdv+'" WHERE fk_id_PDV = '+params.fk_id_PDV, callback);
+};
+//Apagar produto de forma logica
+FilialDAO.prototype.deleteProdutoL = function(idpdv,id_produto,callback) {
+	this._connection.query('UPDATE estoque SET status = 0 WHERE id_produto = '+id_produto+' AND fk2_idPDV ='+idpdv, callback);
+};
+//Apagar produto de forma permanente
+FilialDAO.prototype.deleteProdutoF = function(idpdv,id_produto,callback) {
+	this._connection.query('UPDATE estoque SET status = -1 WHERE id_produto = '+id_produto+' AND fk2_idPDV ='+idpdv, callback);
+};
+//Adicionar produto ao Estoque
+FilialDAO.prototype.addProduto = function(params,callback) {
+	this._connection.query('INSERT INTO estoque SET ?',params, callback);
+};
+//Update produto ao Estoque
+FilialDAO.prototype.updateProduto = function(params,callback) {
+	this._connection.query('UPDATE estoque SET quantidade_estoque = ' + params.quantidade_estoque +''+
+	', nome_produto = "' + params.nome_produto +'"'
+	+ ' , valor = ' + params.valor +'' + ' , status = ' + params.status+' WHERE fk2_idPDV = ' + params.fk2_idPDV +' AND id_produto = '+params.id_produto, callback);
+};
+//Buscar produtos do Estoque
 FilialDAO.prototype.getEstoque = function(idpdv1,callback) {
 	this._connection.query('SELECT * FROM teste.estoque WHERE fk2_idPDV = '+idpdv1, callback);
 };
-
+//Buscar produto - SEM NECESSIDADE
 FilialDAO.prototype.getProdutos = function(idcompra,callback) {
 	this._connection.query('SELECT * FROM teste.produto_comprado, teste.estoque WHERE id_compra = '+idcompra+' AND produto_comprado.id_produto = estoque.id_produto', callback);
 };
-
-
+//----------------------------------------------------------------------------//
 FilialDAO.prototype.saveFilial = function(params, callback) {
 	this._connection.query('INSERT INTO elg_filial SET ?', params, callback);
 };
