@@ -1,6 +1,8 @@
+CREATE DATABASE  IF NOT EXISTS `teste` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `teste`;
 -- MySQL dump 10.13  Distrib 5.7.27, for Linux (x86_64)
 --
--- Host: localhost    Database: mydb
+-- Host: localhost    Database: teste
 -- ------------------------------------------------------
 -- Server version	5.7.27-0ubuntu0.18.04.1
 
@@ -27,6 +29,10 @@ CREATE TABLE `compra` (
   `data_compra` varchar(24) NOT NULL,
   `id_vendedor_responsavel` int(11) NOT NULL,
   `fk_id_pdv_occorrente` int(11) NOT NULL,
+  `valor_compra` int(11) DEFAULT NULL,
+  `forma_pagamento` varchar(45) DEFAULT NULL,
+  `nome_comprador` varchar(45) DEFAULT NULL,
+  `valor_pago` int(11) DEFAULT NULL,
   PRIMARY KEY (`numero_nota`),
   KEY `fk_id_vendedor_responsavel_idx` (`id_vendedor_responsavel`),
   KEY `fk_id_pdv_occorrente_idx` (`fk_id_pdv_occorrente`),
@@ -41,7 +47,7 @@ CREATE TABLE `compra` (
 
 LOCK TABLES `compra` WRITE;
 /*!40000 ALTER TABLE `compra` DISABLE KEYS */;
-INSERT INTO `compra` VALUES (123,'27/10/2019',1,1);
+INSERT INTO `compra` VALUES (123,'27/10/2019',1,1,NULL,NULL,NULL,NULL),(989,'000000',1,1,1233,'Dinheiro','CLEBER',2),(1231239,'21/04/1999',1,1,2,'Dinheiro','Douglas',120),(32131231,'21/01231',1,1,0,'Dinheiro','2131',120);
 /*!40000 ALTER TABLE `compra` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -58,6 +64,7 @@ CREATE TABLE `estoque` (
   `id_produto` int(11) NOT NULL,
   `nome_produto` varchar(45) NOT NULL,
   `valor` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
   PRIMARY KEY (`fk2_idPDV`,`id_produto`),
   KEY `fk_id_produto_idx` (`id_produto`),
   CONSTRAINT `fk2_idPDV` FOREIGN KEY (`fk2_idPDV`) REFERENCES `pdv` (`idPDV`)
@@ -70,7 +77,7 @@ CREATE TABLE `estoque` (
 
 LOCK TABLES `estoque` WRITE;
 /*!40000 ALTER TABLE `estoque` DISABLE KEYS */;
-INSERT INTO `estoque` VALUES (1,5,34,'Cafe',2),(1,10,1234,'Pao',5);
+INSERT INTO `estoque` VALUES (1,1,32,'Carvao',10,1),(1,5,34,'Cafe',2,1),(1,1123,37,'121',1231,1),(1,2000,190,'Pipoca',10,1),(1,34,343,'43',43,1),(1,10,500,'Ovo',10,-1),(2,10,400,'Molho BBQ',14,1),(2,10,1234,'Pao',5,1);
 /*!40000 ALTER TABLE `estoque` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -85,6 +92,9 @@ CREATE TABLE `gerente_pdv` (
   `idGerente_PDV` int(11) NOT NULL,
   `nome_gerente` varchar(40) NOT NULL,
   `data_nascimento` varchar(20) DEFAULT NULL,
+  `tipo` varchar(45) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `senha` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idGerente_PDV`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -95,7 +105,7 @@ CREATE TABLE `gerente_pdv` (
 
 LOCK TABLES `gerente_pdv` WRITE;
 /*!40000 ALTER TABLE `gerente_pdv` DISABLE KEYS */;
-INSERT INTO `gerente_pdv` VALUES (1,'Douglas Silva de Melo','21/04/1999');
+INSERT INTO `gerente_pdv` VALUES (1,'Douglas Silva de Melo','21/04/1999','gerente',NULL,NULL);
 /*!40000 ALTER TABLE `gerente_pdv` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,12 +120,13 @@ CREATE TABLE `informacoes_pdv` (
   `localizacao` varchar(45) DEFAULT NULL,
   `nota` varchar(45) DEFAULT NULL,
   `informacoes_PDVcol` varchar(45) DEFAULT NULL,
-  `data_fundacao` datetime DEFAULT NULL,
+  `data_fundacao` varchar(30) DEFAULT NULL,
   `preco_medio` varchar(45) DEFAULT NULL,
   `CESP` varchar(45) DEFAULT NULL,
   `telefone_fixo` varchar(45) DEFAULT NULL,
   `fk_id_PDV` int(11) NOT NULL,
   `nome_dono_PDV` varchar(45) DEFAULT NULL,
+  `nomepdv` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`fk_id_PDV`),
   KEY `fk_id_PDV_idx` (`fk_id_PDV`),
   CONSTRAINT `fk_id_PDV` FOREIGN KEY (`fk_id_PDV`) REFERENCES `pdv` (`idPDV`)
@@ -128,6 +139,7 @@ CREATE TABLE `informacoes_pdv` (
 
 LOCK TABLES `informacoes_pdv` WRITE;
 /*!40000 ALTER TABLE `informacoes_pdv` DISABLE KEYS */;
+INSERT INTO `informacoes_pdv` VALUES ('69093086','5','Rua Campa','21/04/1999','10','Internal','34509033',1,'Douglas','Internal');
 /*!40000 ALTER TABLE `informacoes_pdv` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -171,6 +183,7 @@ CREATE TABLE `pdv` (
   `fk_gerentePDV` int(11) NOT NULL,
   `email` varchar(45) DEFAULT NULL,
   `senha` int(11) DEFAULT NULL,
+  `tipo` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idPDV`),
   KEY `fk_gerentePDV_idx` (`fk_gerentePDV`),
   CONSTRAINT `fk_gerentePDV` FOREIGN KEY (`fk_gerentePDV`) REFERENCES `gerente_pdv` (`idGerente_PDV`)
@@ -183,7 +196,7 @@ CREATE TABLE `pdv` (
 
 LOCK TABLES `pdv` WRITE;
 /*!40000 ALTER TABLE `pdv` DISABLE KEYS */;
-INSERT INTO `pdv` VALUES (1,'12345',1,'pd1@gmail.com',1234);
+INSERT INTO `pdv` VALUES (1,'12345',1,'pd1@gmail.com',1234,'adm'),(2,'12345',1,'pd2@gmail.com',1234,'adm');
 /*!40000 ALTER TABLE `pdv` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -224,6 +237,9 @@ DROP TABLE IF EXISTS `vendedor`;
 CREATE TABLE `vendedor` (
   `idVendedor` int(11) NOT NULL,
   `fk_id_PDV_pertencente` int(11) NOT NULL,
+  `tipo` varchar(45) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `senha` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idVendedor`),
   KEY `fk_id_PDV_pertencente_idx` (`fk_id_PDV_pertencente`),
   CONSTRAINT `fk_id_PDV_pertencente` FOREIGN KEY (`fk_id_PDV_pertencente`) REFERENCES `pdv` (`idPDV`)
@@ -236,16 +252,16 @@ CREATE TABLE `vendedor` (
 
 LOCK TABLES `vendedor` WRITE;
 /*!40000 ALTER TABLE `vendedor` DISABLE KEYS */;
-INSERT INTO `vendedor` VALUES (1,1);
+INSERT INTO `vendedor` VALUES (1,1,'funcionario','vendedor1@gmail.com','1234');
 /*!40000 ALTER TABLE `vendedor` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Dumping events for database 'mydb'
+-- Dumping events for database 'teste'
 --
 
 --
--- Dumping routines for database 'mydb'
+-- Dumping routines for database 'teste'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -257,4 +273,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-11-05  4:47:50
+-- Dump completed on 2019-11-19  2:17:55

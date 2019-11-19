@@ -34,9 +34,9 @@ export default {
   mounted() {
     var self = this;
     axios
-      .get("http://localhost:5000/compra/get?idpdv=" + 1) // get na API para mostrar todas as filiais
+      .get("http://localhost:5000/compra/get?idpdv=" + window.localStorage.getItem("ID_PDV")) // get na API para mostrar todas as filiais
       .then(function(response) {
-        for (var i = 0; i < response.data.response.length; i++) {
+         for (var i = 0; i < response.data.response.length; i++) {
           // monta a lista de filiais
           self.tableData.push({
             numero_nota: response.data.response[i].numero_nota,

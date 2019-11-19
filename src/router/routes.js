@@ -1,8 +1,11 @@
-import DashboardLayout from "@/layout/dashboard/DashboardLayout.vue";
+import DashboardLayoutGerente from "@/layout/dashboard/DashboardLayoutGerente.vue";
+import DashboardLayouFuncionario from "@/layout/dashboard/DashboardLayouFuncionario.vue";
 // GeneralViews
 import NotFound from "@/pages/NotFoundPage.vue";
 
 // Admin pages
+const Login = () => import(/* webpackChunkName: "dashboard" */"@/pages/Login.vue");
+const ReCompra = () => import(/* webpackChunkName: "dashboard" */"@/pages/RealizarCompra.vue");
 const Dashboard = () => import(/* webpackChunkName: "dashboard" */"@/pages/Dashboard.vue");
 const Estoque = () => import(/* webpackChunkName: "dashboard" */"@/pages/Estoque.vue");
 const Produtos = () => import(/* webpackChunkName: "dashboard" */"@/pages/Produtos.vue");
@@ -16,69 +19,53 @@ const TableList = () => import(/* webpackChunkName: "common" */ "@/pages/TableLi
 
 const routes = [
   {
-    path: "/",
-    component: DashboardLayout,
-    redirect: "/compras",
-    children: [
-      {
-        path: "estoque",
-        name: "estoque",
-        component: Estoque
-      },
-      {
-        path: "compras",
-        name: "compras",
-        component: Compra
-      },
-      {
-        path: "produtos",
-        name: "produtos",
-        component: Produtos
-      },
-      {
-        path: "profile",
-        name: "informacao",
-        component: Profile
-      }
-    ],
+    path: '/',
+    component: Login,
+    name: 'Login'
   },
   {
-    path: "/funcionario",
-    component: DashboardLayout,
-    redirect: "/compras",
+    path: '/dono',
+    component: DashboardLayoutGerente,
+    redirect: '/compras',
+    name: 'DONO PONTO DE VENDA',
     children: [
       {
-        path: "estoque",
-        name: "estoque",
-        component: Estoque
+        path: '/compras',
+        name: 'Compras',
+        components: { default: Compra }
       },
       {
-        path: "compras",
-        name: "compras",
-        component: Compra
+        path: '/profile',
+        name: 'Informacoes',
+        components: { default: Profile }
       },
       {
-        path: "produtos",
-        name: "produtos",
-        component: Produtos
+        path: '/estoque',
+        name: 'Estoque',
+        components: { default: Estoque }
       },
       {
-        path: "profile",
-        name: "informacao",
-        component: Profile
+        path: '/produtos',
+        name: 'Produtos Da Compra',
+        components: { default: Produtos }
       },
-    ],
+    ]
   },
-  { path: "*", component: NotFound },
+  {
+    path: '/funcionario',
+    component: DashboardLayoutGerente,
+    redirect: '/realizarcompra',
+    name: 'FUNCIONARIO PONTO DE VENDAS',
+    children: [
+      {
+        path: '/realizarcompra',
+        name: 'Realizar Compra',
+        components: { default: ReCompra }
+      },
+    ]
+  },
+  { path: '*', component: NotFound }
 ];
 
-/**
- * Asynchronously load view (Webpack Lazy loading compatible)
- * The specified component must be inside the Views folder
- * @param  {string} name  the filename (basename) of the view to load.
-function view(name) {
-   var res= require('../components/Dashboard/Views/' + name + '.vue');
-   return res;
-};**/
 
 export default routes;

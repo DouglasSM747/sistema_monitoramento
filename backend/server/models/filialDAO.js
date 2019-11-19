@@ -5,6 +5,16 @@ function FilialDAO(connection) {
 FilialDAO.prototype.getCompra = function(idpdv,callback) {
 	this._connection.query('SELECT * FROM teste.compra WHERE fk_id_pdv_occorrente = '+idpdv, callback);
 };
+//realizar Compra
+FilialDAO.prototype.realizarCompra = function(params,callback) {
+	this._connection.query('INSERT INTO compra SET ?',params, callback);
+};
+//Login
+FilialDAO.prototype.Login = function(email, senha,callback) {
+	this._connection.query('SELECT *  FROM vendedor WHERE email ="'+email+'" AND senha = "'+senha+'";'+
+	'SELECT * FROM pdv WHERE email ="'+email+'" AND senha = "'+senha+'";'+
+	'SELECT * FROM gerente_pdv WHERE email ="'+email+'" AND senha = "'+senha+'";',callback);
+};
 //Buscar informacao de um pdv
 FilialDAO.prototype.getInfo = function(idpdv,callback) {
 	this._connection.query('SELECT * FROM informacoes_pdv WHERE fk_id_PDV = '+idpdv, callback);

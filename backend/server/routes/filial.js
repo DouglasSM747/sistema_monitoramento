@@ -4,6 +4,10 @@ module.exports = function (application) {
         application.server.controllers.filial.getCompra(application, request, response);
     });
 
+    application.get('/login/get/', function (request, response) {
+        application.server.controllers.filial.Login(application, request, response);
+    });
+
     application.get('/pdv/info/', function (request, response) {
         application.server.controllers.filial.getInfo(application, request, response);
     });
@@ -26,6 +30,10 @@ module.exports = function (application) {
 
     application.post('/estoque/deleteF/', function (request, response) {
         application.server.controllers.filial.deleteProdutoF(application, request, response);
+    });
+
+    application.post('/realizar/compra/', function (request, response) {
+        application.server.controllers.filial.realizarCompra(application, request, response);
     });
 
     application.post('/estoque/addproduto/', function (request, response) {

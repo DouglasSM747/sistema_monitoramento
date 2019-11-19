@@ -1,63 +1,142 @@
+
+
 <template>
-  <div>
-    <!-- Card 1 - Add Produtos -->
-    <card>
-      <h4 class="card-title">Adicionar Produto no Estoque</h4>
-      <p class="card-text">
-        Caso o produto passado para ser adicionado, ja existir no tabela
-        apenas sera incrementado sua quantidade.
-      </p>
-      <!-- botao para abrir adicao de produto -->
-      <base-button
-        class="animation-on-hover"
-        @click.native="AdicionarProduto(1)"
-        type="success"
-      >Adicionar Produto</base-button>
-    </card>
-    <base-table :data="tableData" :columns="columns">
-      <template slot="columns">
-        <th class="text-center">Numero Produto</th>
-        <th>Produto</th>
-        <th>Quantidade</th>
-        <th>Valor</th>
-        <th class="text-right">Excluir</th>
-      </template>
-      <template slot-scope="{row}">
-        <td class="text-center">{{row.id}}</td>
-        <td>{{row.produto}}</td>
-        <td>{{row.quantidade}}</td>
-        <td>{{row.valor}}</td>
-        <td class="td-actions text-right">
-          <base-button type="info" size="sm" icon v-on:click="excluirProduto(row.id)">
-            <i class="tim-icons icon-simple-remove"></i>
-          </base-button>
-        </td>
-      </template>
-    </base-table>
-  </div>
+  <card>
+    <!-- Excluir Produto -->
+    <div>
+      <modal :show.sync="remover_modal">
+        <template slot="header">
+          <h3 class="modal-title" id="exampleModalLabel">Deseja Excluir o Produto do Estoque ?</h3>
+        </template>
+        <template slot="footer">
+          <base-button type="secondary" v-on:click="excluirProdutoLogicamente()" >Sim, logicamente</base-button>
+          <base-button type="secondary" v-on:click="excluirProdutoPermanente()"> Sim, fisicamente</base-button>
+          <base-button type="secondary" @click="remover_modal = false">Cancelar</base-button>
+
+        </template>
+      </modal>
+    </div>
+    <!-- Adicionar Produto -->
+    <div>
+      <modal
+        :show.sync="Adicionar_modal"
+        body-classes="p-0"
+        modal-classes="modal-dialog-centered modal-sm"
+      >
+        <card type="secondary" body-classes="px-lg-5 py-lg-5" class="border-0 mb-0">
+          <template>
+            <div class="text-muted text-center mb-3">Adicionar Produto Em Estoque</div>
+            <form role="form">
+              <base-input
+                alternative
+                class="mb-3"
+                placeholder="Codigo do Produto"
+                addon-left-icon="ni ni-email-83"
+                v-model="produtoEdit.id"
+              ></base-input>
+              <base-input
+                alternative
+                v-model="produtoEdit.quantidade"
+                placeholder="Quantidade"
+                addon-left-icon="ni ni-lock-circle-open"
+              ></base-input>
+              <base-input
+                alternative
+                v-model="produtoEdit.nome"
+                placeholder="Nome do Produto"
+                addon-left-icon="ni ni-lock-circle-open"
+              ></base-input>
+              <base-input
+                alternative
+                v-model="produtoEdit.valor"
+                placeholder="Valor do Produto"
+                addon-left-icon="ni ni-lock-circle-open"
+              ></base-input>
+              <div class="text-center">
+                <base-button
+                  v-on:click="verificarAddEstoque(produtoEdit.id)"
+                  type="primary"
+                  class="my-4"
+                >Adicionar</base-button>
+                <base-button
+                  v-on:click="Adicionar_modal = false"
+                  type="secundary"
+                  class="my-4"
+                >Cancelar</base-button>
+              </div>
+            </form>
+          </template>
+        </card>
+      </modal>
+    </div>
+
+    <div>
+      <!-- Card 1 - Add Produtos -->
+      <card>
+        <h4 class="card-title">Adicionar Produto no Estoque</h4>
+        <p class="card-text">
+          Caso o produto passado para ser adicionado, ja existir no tabela
+          apenas sera incrementado sua quantidade.
+        </p>
+        <!-- botao para abrir adicao de produto -->
+        <base-button
+          class="animation-on-hover"
+          @click="Adicionar_modal= true"
+          type="success"
+        >Adicionar Produto</base-button>
+      </card>
+      <base-table :data="tableData" :columns="columns">
+        <template slot="columns">
+          <th class="text-center">Numero Produto</th>
+          <th>Produto</th>
+          <th>Quantidade</th>
+          <th>Valor</th>
+          <th class="text-right">Excluir</th>
+        </template>
+        <template slot-scope="{row}">
+          <td class="text-center">{{row.id}}</td>
+          <td>{{row.produto}}</td>
+          <td>{{row.quantidade}}</td>
+          <td>{{row.valor}}</td>
+          <td class="td-actions text-right">
+            <base-button type="info" size="sm" icon v-on:click="abrirModalExclusao(row.id)">
+              <i class="tim-icons icon-simple-remove"></i>
+            </base-button>
+          </td>
+        </template>
+      </base-table>
+    </div>
+  </card>
 </template>
 <script>
 import { BaseTable } from "@/components";
 import axios from "axios";
 import swal from "sweetalert2";
+import { Modal } from "/home/douglas/Downloads/vue-black-dashboard-master/src/components";
 const Swal = require("sweetalert2");
 
 export default {
   components: {
-    BaseTable
+    BaseTable,
+    Modal
   },
   data() {
     return {
+      produto_excluir: "",
+      Adicionar_modal: false,
+      remover_modal: false,
       columns: ["id", "name", "job", "since", "excluir"],
       tableData: [],
-      produtoEdit: { id: 0, quantidade: 0, nome: "", valor: 0 }
+      produtoEdit: { id: "", quantidade: "", nome: "", valor: "" },
+      atual_pdv: window.localStorage.getItem("ID_PDV")
     };
   },
   mounted() {
+    this.atual_pdv = window.localStorage.getItem("ID_PDV");
     var self = this;
     //puxa todos os itens do estoque do PDV que tem como status == 1
     axios
-      .get("http://localhost:5000/estoque/get?idpdv=1") // get na API para mostrar todas os pdv
+      .get("http://localhost:5000/estoque/get?idpdv=" + self.atual_pdv) // get na API para mostrar todas os pdv
       .then(function(response) {
         for (var i = 0; i < response.data.response.length; i++) {
           if (response.data.response[i].status == 1) {
@@ -76,146 +155,101 @@ export default {
       });
   },
   methods: {
-    AdicionarProduto(idPDV) {
-      Swal.mixin({
-        confirmButtonText: "Adicionar",
-        showCancelButton: true,
-        cancelButtonText: "Cancelar"
-      })
-        .queue([
-          {
-            title: "Adicionar Produto",
-            html:
-              '<input id="swal-input25" class="swal2-input" placeholder="Codigo do produto">' +
-              '<input id="swal-input26" class="swal2-input" placeholder="Quantidade">' +
-              '<input id="swal-input27" class="swal2-input" placeholder="Valor">' +
-              '<input id="swal-input28" class="swal2-input" placeholder="Nome">',
-            focusConfirm: false,
-            preConfirm: () => {
-              return [
-                (this.produtoEdit.id = document.getElementById(
-                  "swal-input25"
-                ).value),
-                (this.produtoEdit.quantidade = document.getElementById(
-                  "swal-input26"
-                ).value),
-                (this.produtoEdit.valor = document.getElementById(
-                  "swal-input27"
-                ).value),
-                (this.produtoEdit.nome = document.getElementById(
-                  "swal-input28"
-                ).value)
-              ];
-            }
-          }
-        ])
-        .then(result => {
-          if (result.value) {
-            var existe = false;
-            for (var i = 0; i < this.tableData.length; i++) {
-              //se nao existir na tabela
-              if (
-                this.tableData[i].id_pdv == 1 &&
-                this.produtoEdit.id == this.tableData[i].id
-              ) {
-                existe = true;
-              }
-            }
-            if (existe) {
-              // se o produto ja tem, somente atualiza
-              axios
-                .post("http://localhost:5000/estoque/updateproduto", {
-                  // Passa a informacoes do produto
-                  idproduto: this.produtoEdit.id,
-                  quantidade: this.produtoEdit.quantidade,
-                  valor: this.produtoEdit.valor,
-                  nome: this.produtoEdit.nome,
-                  status: 1,
-                  idpdv: 1
-                })
-                .then(function(response) {
-                  console.log(response.data);
-                })
-                .catch(function(error) {
-                  console.log(error);
-                });
-              Swal.fire({
-                title: "Concluído",
-                confirmButtonText: "OK!"
-              });
-            } else {
-              // se o produto n tem, adiciona no sistema
-              axios
-                .post("http://localhost:5000/estoque/addproduto", {
-                  // Passa a informacoes do produto
-                  idproduto: this.produtoEdit.id,
-                  quantidade: this.produtoEdit.quantidade,
-                  valor: this.produtoEdit.valor,
-                  nome: this.produtoEdit.nome,
-                  status: 1,
-                  idpdv: 1
-                })
-                .then(function(response) {
-                  console.log(response.data);
-                })
-                .catch(function(error) {
-                  console.log(error);
-                });
-              Swal.fire({
-                title: "Concluído",
-                confirmButtonText: "OK!"
-              });
-            }
-          }
+
+    abrirModalExclusao(id){
+    this.remover_modal = true
+    this.produto_excluir = id
+    },
+
+    verificarAddEstoque(codigo_produto) {
+      var achou = false;
+      for (var i = 0; i < this.tableData.length; i++) {
+        if (codigo_produto == this.tableData[i].id) {
+          achou = true;
+          break;
+        }
+      }
+      if (achou) {
+        this.atualizarProduto(codigo_produto);
+      } else {
+        this.AdicionarProduto(codigo_produto);
+      }
+    },
+    atualizarProduto(codigo_produto) {
+      // se o produto n tem, adiciona no sistema
+      axios
+        .post("http://localhost:5000/estoque/updateproduto", {
+          // Passa a informacoes do produto
+          idproduto: this.produtoEdit.id,
+          quantidade: this.produtoEdit.quantidade,
+          valor: this.produtoEdit.valor,
+          nome: this.produtoEdit.nome,
+          status: 1,
+          idpdv: window.localStorage.getItem("ID_PDV")
+        })
+        .then(function(response) {
+          console.log(response.data);
+        })
+        .catch(function(error) {
+          console.log(error);
         });
+      location.reload();
+    },
+    AdicionarProduto(codigo_produto) {
+      // se o produto ja tem, somente atualiza
+      axios
+        .post("http://localhost:5000/estoque/addproduto", {
+          // Passa a informacoes do produto
+          idproduto: this.produtoEdit.id,
+          quantidade: this.produtoEdit.quantidade,
+          valor: this.produtoEdit.valor,
+          nome: this.produtoEdit.nome,
+          status: 1,
+          idpdv: window.localStorage.getItem("ID_PDV")
+        })
+        .then(function(response) {
+          console.log(response.data);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      location.reload();
     },
 
     //funcao resposanvel por excluir produto de forma logica ou fisica
-    excluirProduto(id) {
-      Swal.fire({
-        title: "Excluir Item do Estoque?",
-        type: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Sim, temporario",
-        confirmButtonText: "Sim, temporario",
-        cancelButtonText: "Sim, excluir permanente",
-        showCloseButton: true
-      }).then(result => {
-        //excluir de forma temporaria
-        console.log(result.value);
-        if (result.value) {
-          axios
-            .post(
-              "http://localhost:5000/estoque/deleteL?idpdv=1&idproduto=" + id
-            )
-            .then(function(response) {
-              Swal.fire({
-                title: "Excluido Temporariamente",
-                confirmButtonText: "OK!"
-              });
-            })
-            .catch(function(error) {
-              console.log(error);
-            });
-        } else {
-          //excluir de forma permanente
-          axios
-            .post(
-              "http://localhost:5000/estoque/deleteF?idpdv=1&idproduto=" + id
-            )
-            .then(function(response) {
-              Swal.fire({
-                title: "Excluido Permanente",
-                confirmButtonText: "OK!"
-              });
-            })
-            .catch(function(error) {
-              console.log(error);
-            });
-        }
-      });
+    excluirProdutoLogicamente() {
+      var self = this
+      axios
+        .post(
+          "http://localhost:5000/estoque/deleteL?idpdv=" +
+            this.atual_pdv +
+            "&idproduto=" +
+            self.produto_excluir
+        )
+        .then(function(response) {
+          console.log("excluido");
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+        location.reload();
+    },
+    excluirProdutoPermanente(id) {
+      var self = this
+      axios
+        .post(
+          "http://localhost:5000/estoque/deleteF?idpdv=" +
+            this.atual_pdv +
+            "&idproduto=" +
+            self.produto_excluir
+        )
+        .then(function(response) {
+          console.log("excluido");
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+        location.reload();
     }
   }
 };

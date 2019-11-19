@@ -65,7 +65,7 @@ export default {
     var self = this;
     //puxa todos os itens do estoque do PDV que tem como status == 1
     axios
-      .get("http://localhost:5000/pdv/info?idpdv=1") // get na API para mostrar todas os pdv
+      .get("http://localhost:5000/pdv/info?idpdv="+window.localStorage.getItem("ID_PDV")) // get na API para mostrar todas os pdv
       .then(function(response) {
         (self.atual_pdv = response.data.response[0].fk_id_PDV),
           (self.nomepdv = response.data.response[0].nomepdv),
@@ -87,7 +87,7 @@ export default {
     SalvarInfo(id) {
       axios
         .post("http://localhost:5000/pdv/saveinfo", {
-          atual_pdv: this.atual_pdv,
+          atual_pdv: window.localStorage.getItem("ID_PDV"),
           nomepdv: this.nomepdv,
           nota: this.nota,
           localizacao:  this.localizacao,
