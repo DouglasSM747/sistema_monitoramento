@@ -1,4 +1,5 @@
 <template>
+<card>
   <div>
     <card>Valor total desta compra: {{valor_total}}</card>
 
@@ -15,6 +16,7 @@
       </template>
     </base-table>
   </div>
+</card>
 </template>
 <script>
 import axios from "axios";

@@ -28,6 +28,10 @@ module.exports = function (application) {
         application.server.controllers.filial.deleteProdutoL(application, request, response);
     });
 
+    application.post('/realizar/compra/produto', function (request, response) {
+        application.server.controllers.filial.addProdutoCompra(application, request, response);
+    });
+
     application.post('/estoque/deleteF/', function (request, response) {
         application.server.controllers.filial.deleteProdutoF(application, request, response);
     });

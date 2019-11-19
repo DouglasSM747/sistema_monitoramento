@@ -14,7 +14,12 @@
           label="Nome Comprador"
           placeholder="Joao ..."
         />
-        <base-input class="col-md-4" v-model="numero_nota" label="Numero da Nota" placeholder="Numero da Nota" />
+        <base-input
+          class="col-md-4"
+          v-model="numero_nota"
+          label="Numero da Nota"
+          placeholder="Numero da Nota"
+        />
       </div>
       <div class="form-row">
         <base-input
@@ -62,7 +67,12 @@
             <td class="text-center">{{row.valor}}</td>
             <td class="text-center">{{row.produto}}</td>
             <td class="td-actions text-center">
-              <base-button v-on:click="excluirProduto(row.id,row.valor)" type="danger" size="sm" icon>
+              <base-button
+                v-on:click="excluirProduto(row.id,row.valor)"
+                type="danger"
+                size="sm"
+                icon
+              >
                 <i class="tim-icons icon-simple-remove"></i>
               </base-button>
             </td>
@@ -71,8 +81,7 @@
       </div>
       <div>
         Quantidade Total: {{quantidade_total_compra}}
-        <base-button type="primary"  v-on:click="realizarCompra()"  >Realizar Compra</base-button>
-
+        <base-button type="primary" v-on:click="realizarCompra()">Realizar Compra</base-button>
       </div>
     </form>
   </card>
@@ -92,7 +101,7 @@ export default {
       selected: "",
       columns: ["Id", "Data Compra", "Numero da Nota", "Vendedor"],
       tableData: [],
-      tabelaProdutos:[],
+      tabelaProdutos: [],
       data_compra: "",
       numero_nota: "",
       nome_comprador: "",
@@ -138,11 +147,11 @@ export default {
   },
   computed: {},
   methods: {
-    excluirProduto(item,valor) {
+    excluirProduto(item, valor) {
       var self = this;
       var i = 0;
-      for(i = 0; i < self.tabelaProdutos.length;i++){
-        if(self.tabelaProdutos[i].id == item){
+      for (i = 0; i < self.tabelaProdutos.length; i++) {
+        if (self.tabelaProdutos[i].id == item) {
           self.tabelaProdutos.pop(i);
           break;
         }
@@ -151,10 +160,10 @@ export default {
     },
     adicionarProduto(item) {
       var self = this;
-      for(var i = 0; i < self.tableData.length;i++){
-        if(self.tableData[i].id == item){
+      for (var i = 0; i < self.tableData.length; i++) {
+        if (self.tableData[i].id == item) {
           self.tabelaProdutos.push(self.tableData[i]);
-          self.quantidade_total_compra+=self.tableData[i].valor;
+          self.quantidade_total_compra += self.tableData[i].valor;
           break;
         }
       }
@@ -167,6 +176,7 @@ export default {
       }
     },
     realizarCompra() {
+      var self = this;
       // se o produto n tem, adiciona no sistema
       axios
         .post("http://localhost:5000/realizar/compra", {
@@ -181,12 +191,30 @@ export default {
           valor_pago: this.valor_pago
         })
         .then(function(response) {
-          console.log(response.data);
+          console.log("FOI");
+          self.addProdutoCompra();
         })
         .catch(function(error) {
           console.log(error);
         });
     },
+    addProdutoCompra() {
+      console.log("ESTOU AQUI")
+      var self = this;
+      for (var i = 0; i < self.tabelaProdutos.length; i++) {
+          axios.post("http://localhost:5000/realizar/compra/produto", {
+              // Passa a informacoes do produto
+              numero_nota: self.numero_nota,
+              id_produto: self.tabelaProdutos[i].id
+            })
+            .then(function(response) {
+                location.reload();
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+      }
+    }
   }
 };
 </script>

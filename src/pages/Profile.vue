@@ -1,11 +1,8 @@
 <template>
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-50" style="margin-left: 400px ">
       <edit-profile-form>
       </edit-profile-form>
-    </div>
-    <div class="col-md-4">
-      <user-card></user-card>
     </div>
   </div>
 </template>
@@ -16,7 +13,6 @@
   export default {
     components: {
       EditProfileForm,
-      UserCard
     }
   }
 </script>

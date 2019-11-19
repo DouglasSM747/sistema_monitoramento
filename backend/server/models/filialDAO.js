@@ -55,6 +55,11 @@ FilialDAO.prototype.saveFilial = function(params, callback) {
 	this._connection.query('INSERT INTO elg_filial SET ?', params, callback);
 };
 
+//----------------------------------------------------------------------------//
+FilialDAO.prototype.addProdutoCompra = function(params, callback) {
+	this._connection.query('INSERT INTO produto_comprado SET ?', params, callback);
+};
+
 FilialDAO.prototype.simpleSearchFilial = function(nome, callback) {
 	this._connection.query('SELECT * FROM elg_filial WHERE status = 1 AND nome LIKE "%' + nome +'%"', callback);
 };

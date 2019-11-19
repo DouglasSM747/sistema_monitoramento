@@ -47,7 +47,7 @@ CREATE TABLE `compra` (
 
 LOCK TABLES `compra` WRITE;
 /*!40000 ALTER TABLE `compra` DISABLE KEYS */;
-INSERT INTO `compra` VALUES (123,'27/10/2019',1,1,NULL,NULL,NULL,NULL),(989,'000000',1,1,1233,'Dinheiro','CLEBER',2),(1231239,'21/04/1999',1,1,2,'Dinheiro','Douglas',120),(32131231,'21/01231',1,1,0,'Dinheiro','2131',120);
+INSERT INTO `compra` VALUES (1,'13213',1,1,129,'Dinheiro','10',12312313),(123,'27/10/2019',1,1,NULL,NULL,NULL,NULL),(9898,'21/04/0001',1,1,10,'Dinheiro','João',10);
 /*!40000 ALTER TABLE `compra` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -77,7 +77,7 @@ CREATE TABLE `estoque` (
 
 LOCK TABLES `estoque` WRITE;
 /*!40000 ALTER TABLE `estoque` DISABLE KEYS */;
-INSERT INTO `estoque` VALUES (1,1,32,'Carvao',10,1),(1,5,34,'Cafe',2,1),(1,1123,37,'121',1231,1),(1,2000,190,'Pipoca',10,1),(1,34,343,'43',43,1),(1,10,500,'Ovo',10,-1),(2,10,400,'Molho BBQ',14,1),(2,10,1234,'Pao',5,1);
+INSERT INTO `estoque` VALUES (1,1,32,'Carvao',10,1),(1,5,34,'Cafe',2,1),(1,1123,37,'121',1231,1),(1,2000,190,'Pipoca',10,1),(1,34,343,'43',43,1),(1,10,500,'Ovo',10,-1),(1,199,12340,'Joao Queroga',1,1),(2,10,400,'Molho BBQ',14,1),(2,10,1234,'Pao',5,1);
 /*!40000 ALTER TABLE `estoque` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -139,7 +139,7 @@ CREATE TABLE `informacoes_pdv` (
 
 LOCK TABLES `informacoes_pdv` WRITE;
 /*!40000 ALTER TABLE `informacoes_pdv` DISABLE KEYS */;
-INSERT INTO `informacoes_pdv` VALUES ('69093086','5','Rua Campa','21/04/1999','10','Internal','34509033',1,'Douglas','Internal');
+INSERT INTO `informacoes_pdv` VALUES ('69093086','5','Rua Campa Queiroz ','21/04/1999','10','Internal','34509033',1,'Douglas Silva','Internal');
 /*!40000 ALTER TABLE `informacoes_pdv` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -210,6 +210,7 @@ DROP TABLE IF EXISTS `produto_comprado`;
 CREATE TABLE `produto_comprado` (
   `id_compra` int(11) NOT NULL,
   `id_produto` int(11) NOT NULL,
+  `quantidade` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id_compra`,`id_produto`),
   KEY `id_produto_idx` (`id_produto`),
   CONSTRAINT `id_compra` FOREIGN KEY (`id_compra`) REFERENCES `compra` (`numero_nota`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -223,7 +224,7 @@ CREATE TABLE `produto_comprado` (
 
 LOCK TABLES `produto_comprado` WRITE;
 /*!40000 ALTER TABLE `produto_comprado` DISABLE KEYS */;
-INSERT INTO `produto_comprado` VALUES (123,34),(123,1234);
+INSERT INTO `produto_comprado` VALUES (123,34,NULL),(123,1234,NULL),(9898,34,NULL);
 /*!40000 ALTER TABLE `produto_comprado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -273,4 +274,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-11-19  2:17:55
+-- Dump completed on 2019-11-19 13:56:45

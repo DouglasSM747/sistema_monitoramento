@@ -1,4 +1,5 @@
 <template>
+<card>
   <base-table :data="tableData" :columns="columns">
     <template slot="columns">
       <th class="text-center"> Data Compra</th>
@@ -17,6 +18,7 @@
       </td>
     </template>
   </base-table>
+</card>
 </template>
 <script>
 import { BaseTable } from "@/components";

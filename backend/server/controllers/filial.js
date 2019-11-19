@@ -340,3 +340,29 @@ module.exports.realizarCompra = function (application, request, response) {
         });
     }
 }
+
+module.exports.addProdutoCompra = function (application, request, response) {
+    if (request.method == 'POST') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+        
+
+        var params = {
+             id_compra: parseInt(request.body.numero_nota),
+             id_produto: parseInt(request.body.id_produto)
+        };
+
+
+        filialModel.addProdutoCompra(params, function (error, result) {
+            if (!result) {
+                // console.log(error);
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
