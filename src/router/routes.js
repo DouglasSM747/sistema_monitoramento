@@ -4,6 +4,7 @@ import DashboardLayouFuncionario from "@/layout/dashboard/DashboardLayouFunciona
 import NotFound from "@/pages/NotFoundPage.vue";
 
 // Admin pages
+const Funcionarios = () => import(/* webpackChunkName: "dashboard" */"@/pages/ListFun.vue");
 const Login = () => import(/* webpackChunkName: "dashboard" */"@/pages/Login.vue");
 const ReCompra = () => import(/* webpackChunkName: "dashboard" */"@/pages/RealizarCompra.vue");
 const Dashboard = () => import(/* webpackChunkName: "dashboard" */"@/pages/Dashboard.vue");
@@ -49,11 +50,16 @@ const routes = [
         name: 'Produtos Da Compra',
         components: { default: Produtos }
       },
+      {
+        path: '/funcionarios',
+        name: 'Funcionarios',
+        components: { default: Funcionarios }
+      },      
     ]
   },
   {
     path: '/funcionario',
-    component: DashboardLayoutGerente,
+    component: DashboardLayouFuncionario,
     redirect: '/realizarcompra',
     name: 'FUNCIONARIO PONTO DE VENDAS',
     children: [

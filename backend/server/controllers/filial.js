@@ -17,6 +17,25 @@ module.exports.getCompra = function (application, request, response) {
     }
 }
 
+module.exports.getFuncionario = function (application, request, response) {
+
+    if (request.method == 'GET') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+        var idpdv = request.query.idpdv;
+        filialModel.getFuncionario(idpdv, function (error, result) {
+            if (!result) {
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+
 module.exports.Login = function (application, request, response) {
 
     if (request.method == 'GET') {
@@ -315,6 +334,7 @@ module.exports.realizarCompra = function (application, request, response) {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
         
+
         var params = {
             numero_nota: parseInt(request.body.numero_nota),
             data_compra: request.body.data_compra,
@@ -326,6 +346,7 @@ module.exports.realizarCompra = function (application, request, response) {
             valor_pago: parseInt(request.body.valor_pago),
 
         };
+
 
         filialModel.realizarCompra(params, function (error, result) {
             if (!result) {
@@ -349,13 +370,42 @@ module.exports.addProdutoCompra = function (application, request, response) {
 
         var params = {
              id_compra: parseInt(request.body.numero_nota),
-             id_produto: parseInt(request.body.id_produto)
+             id_produto: parseInt(request.body.id_produto),
+             quantidade_comprada: parseInt(request.body.quantidade_comprada),
         };
 
 
         filialModel.addProdutoCompra(params, function (error, result) {
             if (!result) {
                 // console.log(error);
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+
+module.exports.cadastrarFuncionario = function (application, request, response) {
+    if (request.method == 'POST') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+        
+
+        var params = {
+            idVendedor: parseInt(request.body.id),
+            fk_id_PDV_pertencente: parseInt(request.body.fk_id_PDV_pertencente),
+            tipo: 'funcionario',
+            email: request.body.email,
+            senha: parseInt(request.body.senha)
+        };
+
+        filialModel.cadastrarFuncionario(params, function (error, result) {
+            if (!result) {
+                console.log(error);
                 response.send({ success: true, response: false });
                 filialModel._connection.end();
             }

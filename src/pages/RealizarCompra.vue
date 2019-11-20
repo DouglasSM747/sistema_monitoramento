@@ -42,6 +42,7 @@
         </base-input>
       </div>
       <div class="form-row">
+        <!-- codigo do produto a ser adicionado -->
         <input
           slot="header"
           v-model="produto_adicionado"
@@ -51,21 +52,37 @@
           class="form-control"
           id="inlineFormInputGroup"
           placeholder="Digite aqui o numero do produto para ser adicionado"
-          v-on:keyup.enter="adicionarProduto(produto_adicionado)"
+          v-on:keyup.enter="verificarProdutoNaTabela(produto_adicionado)"
+        />
+        <!-- Quantidade do produto a ser adicionado -->
+        <input
+          slot="header"
+          v-model="quantidade_adicionada"
+          type="text"
+          dark="true"
+          hide-details="true"
+          class="form-control"
+          id="inlineFormInputGroup"
+          placeholder="Digite aqui a quantidade a ser adicionado"
+          v-on:keyup.enter="verificarProdutoNaTabela(produto_adicionado)"
         />
       </div>
       <div>
         <base-table :data="tabelaProdutos" :columns="columns">
           <template slot="columns">
-            <th class="text-center">Produto</th>
+            <th class="text-center">Numero Produto</th>
+            <th class="text-center">Nome Produto</th>
             <th class="text-center">Valor</th>
-            <th class="text-center">Quantidade</th>
+            <th class="text-center">Quantidade Comprada</th>
+            <th class="text-center">Quantidade Disponivel</th>
             <th class="text-center">Actions</th>
           </template>
           <template slot-scope="{row}">
             <td class="text-center">{{row.id}}</td>
-            <td class="text-center">{{row.valor}}</td>
             <td class="text-center">{{row.produto}}</td>
+            <td class="text-center">{{row.valor}}</td>
+            <td class="text-center">{{row.quantidade_comprada}}</td>
+            <td class="text-center">{{row.quantidade_disponivel}}</td>
             <td class="td-actions text-center">
               <base-button
                 v-on:click="excluirProduto(row.id,row.valor)"
@@ -97,6 +114,7 @@ export default {
     return {
       quantidade_total_compra: 0,
       produto_adicionado: "",
+      quantidade_adicionada: "",
       pagamento_vista: false,
       selected: "",
       columns: ["Id", "Data Compra", "Numero da Nota", "Vendedor"],
@@ -133,10 +151,12 @@ export default {
           if (response.data.response[i].status == 1) {
             self.tableData.push({
               id_pdv: response.data.response[i].fk2_idPDV,
-              quantidade: response.data.response[i].quantidade_estoque,
+              quantidade_disponivel:
+                response.data.response[i].quantidade_estoque,
               id: response.data.response[i].id_produto,
               produto: response.data.response[i].nome_produto,
-              valor: response.data.response[i].valor
+              valor: response.data.response[i].valor,
+              quantidade_comprada: 0
             });
           }
         }
@@ -148,32 +168,72 @@ export default {
   computed: {},
   methods: {
     excluirProduto(item, valor) {
-      var self = this;
       var i = 0;
-      for (i = 0; i < self.tabelaProdutos.length; i++) {
-        if (self.tabelaProdutos[i].id == item) {
-          self.tabelaProdutos.pop(i);
-          break;
-        }
-      }
-      self.quantidade_total_compra -= valor;
-    },
-    adicionarProduto(item) {
-      var self = this;
-      for (var i = 0; i < self.tableData.length; i++) {
-        if (self.tableData[i].id == item) {
-          self.tabelaProdutos.push(self.tableData[i]);
-          self.quantidade_total_compra += self.tableData[i].valor;
+      for (i = 0; i < this.tabelaProdutos.length; i++) {
+        if (this.tabelaProdutos[i].id == item) {
+          this.quantidade_total_compra -= valor * parseInt(this.tabelaProdutos[i].quantidade_comprada);
+
+          this.tabelaProdutos.pop(i);
           break;
         }
       }
     },
+
     SelecionarFormaPagamento(opcao) {
       if (opcao == "Dinheiro") {
         this.pagamento_vista = true;
       } else {
         this.pagamento_vista = false;
       }
+    },
+    verificarProdutoNaTabela(codigo_produto) {
+      var self = this;
+      var achou2 = false;
+      var i = 0;
+      var info_produto;
+
+      //verifica se tem no estoque
+      for (i = 0; i < self.tableData.length; i++) {
+        if (self.tableData[i].id == codigo_produto) {
+          info_produto = self.tableData[i];
+          this.VerificarProdutoTabelaDeProdutos(codigo_produto, info_produto);
+          break;
+        }
+      }
+    },
+
+    VerificarProdutoTabelaDeProdutos(codigo_produto, produto) {
+      var i = 0;
+      var achou = false;
+      //se achou verifica se existe ou n na tabela de produtos
+      for (i = 0; i < this.tabelaProdutos.length; i++) {
+        if (codigo_produto == this.tabelaProdutos[i].id) {
+          achou = true;
+          break;
+        }
+      }
+      //se existe na tabela atualiza
+      if (achou) {
+        this.attProduto(i);
+      } else {
+        //se n existe na tabela add
+        this.addProduto(produto);
+      }
+    },
+
+    attProduto(indice) {
+      if( this.quantidade_adicionada > 0 && this.quantidade_adicionada <= this.tabelaProdutos[indice].quantidade_disponivel){
+        this.tabelaProdutos[indice].quantidade_disponivel -= parseInt(this.quantidade_adicionada);
+        this.tabelaProdutos[indice].quantidade_comprada += parseInt (this.quantidade_adicionada);
+        this.quantidade_total_compra += parseInt(this.tabelaProdutos[indice].valor * this.quantidade_adicionada);
+      }
+    },
+
+    addProduto(produto) {
+      produto.quantidade_disponivel -= parseInt(this.quantidade_adicionada);
+      produto.quantidade_comprada = parseInt(this.quantidade_adicionada);
+      this.tabelaProdutos.push(produto);
+      this.quantidade_total_compra += parseInt(produto.valor * this.quantidade_adicionada);
     },
     realizarCompra() {
       var self = this;
@@ -199,21 +259,22 @@ export default {
         });
     },
     addProdutoCompra() {
-      console.log("ESTOU AQUI")
       var self = this;
       for (var i = 0; i < self.tabelaProdutos.length; i++) {
-          axios.post("http://localhost:5000/realizar/compra/produto", {
-              // Passa a informacoes do produto
-              numero_nota: self.numero_nota,
-              id_produto: self.tabelaProdutos[i].id
-            })
-            .then(function(response) {
-                location.reload();
-            })
-            .catch(function(error) {
-              console.log(error);
-            });
+        axios
+          .post("http://localhost:5000/realizar/compra/produto", {
+            // Passa a informacoes do produto
+            numero_nota: self.numero_nota,
+            id_produto: self.tabelaProdutos[i].id,
+            quantidade_comprada: self.tabelaProdutos[i].quantidade_comprada
+          })
+          .then(function(response) {
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
       }
+      location.reload();
     }
   }
 };

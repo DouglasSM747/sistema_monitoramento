@@ -1,6 +1,10 @@
 function FilialDAO(connection) {
     this._connection = connection;
 }
+//Buscar funcionarios de em um pdv
+FilialDAO.prototype.getFuncionario = function(idpdv,callback) {
+	this._connection.query('SELECT * FROM teste.vendedor WHERE fk_id_PDV_pertencente = '+idpdv, callback);
+};
 //Buscar compras feitas em um pdv
 FilialDAO.prototype.getCompra = function(idpdv,callback) {
 	this._connection.query('SELECT * FROM teste.compra WHERE fk_id_pdv_occorrente = '+idpdv, callback);
@@ -8,6 +12,10 @@ FilialDAO.prototype.getCompra = function(idpdv,callback) {
 //realizar Compra
 FilialDAO.prototype.realizarCompra = function(params,callback) {
 	this._connection.query('INSERT INTO compra SET ?',params, callback);
+};
+//realizar Compra
+FilialDAO.prototype.cadastrarFuncionario = function(params,callback) {
+	this._connection.query('INSERT INTO vendedor SET ?',params, callback);
 };
 //Login
 FilialDAO.prototype.Login = function(email, senha,callback) {

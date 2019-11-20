@@ -4,6 +4,10 @@ module.exports = function (application) {
         application.server.controllers.filial.getCompra(application, request, response);
     });
 
+    application.get('/vendedor/get/', function (request, response) {
+        application.server.controllers.filial.getFuncionario(application, request, response);
+    });
+
     application.get('/login/get/', function (request, response) {
         application.server.controllers.filial.Login(application, request, response);
     });
@@ -14,6 +18,10 @@ module.exports = function (application) {
 
     application.post('/pdv/saveinfo/', function (request, response) {
         application.server.controllers.filial.saveInfo(application, request, response);
+    });
+
+    application.post('/cadastrar/vendedor/', function (request, response) {
+        application.server.controllers.filial.cadastrarFuncionario(application, request, response);
     });
 
     application.get('/produtos/get/', function (request, response) {

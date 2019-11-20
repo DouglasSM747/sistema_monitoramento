@@ -112,7 +112,7 @@
 import { BaseTable } from "@/components";
 import axios from "axios";
 import swal from "sweetalert2";
-import { Modal } from "/home/douglas/Documentos/sistema_monitoramento/src/components";
+import { Modal } from "/home/douglas/Downloads/vue-black-dashboard-master/src/components";
 const Swal = require("sweetalert2");
 
 export default {

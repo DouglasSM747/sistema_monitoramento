@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-md-50" style="margin-left: 400px ">
+    <div class="col-md-50" style="margin-left: auto margin-right: auto">
       <edit-profile-form>
       </edit-profile-form>
     </div>
