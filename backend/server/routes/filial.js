@@ -8,6 +8,10 @@ module.exports = function (application) {
         application.server.controllers.filial.getFuncionario(application, request, response);
     });
 
+    application.get('/infoempresa/vendedor/get', function (request, response) {
+        application.server.controllers.filial.getInfoEmpresaFuncionario(application, request, response);
+    });
+
     application.get('/login/get/', function (request, response) {
         application.server.controllers.filial.Login(application, request, response);
     });
@@ -22,6 +26,10 @@ module.exports = function (application) {
 
     application.post('/cadastrar/vendedor/', function (request, response) {
         application.server.controllers.filial.cadastrarFuncionario(application, request, response);
+    });
+
+    application.post('/infoempresa/vendedor/post/', function (request, response) {
+        application.server.controllers.filial.salvarInfoEmpresaVendedor(application, request, response);
     });
 
     application.get('/produtos/get/', function (request, response) {

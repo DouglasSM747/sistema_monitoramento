@@ -4,6 +4,7 @@ module.exports.getCompra = function (application, request, response) {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
         var idpdv = request.query.idpdv;
+
         filialModel.getCompra(idpdv, function (error, result) {
             if (!result) {
                 response.send({ success: true, response: false });
@@ -25,6 +26,27 @@ module.exports.getFuncionario = function (application, request, response) {
         var idpdv = request.query.idpdv;
         filialModel.getFuncionario(idpdv, function (error, result) {
             if (!result) {
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+
+module.exports.getInfoEmpresaFuncionario = function (application, request, response) {
+
+    if (request.method == 'GET') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+        var id_vendedor = request.query.id_vendedor;
+
+        filialModel.getInfoEmpresaFuncionario(id_vendedor, function (error, result) {
+            if (!result) {
+                console.log(error);
                 response.send({ success: true, response: false });
                 filialModel._connection.end();
             }
@@ -304,7 +326,7 @@ module.exports.updateProduto = function (application, request, response) {
     if (request.method == 'POST') {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
-        
+
         var params = {
             fk2_idPDV: parseInt(request.body.idpdv),
             quantidade_estoque: parseInt(request.body.quantidade),
@@ -329,11 +351,41 @@ module.exports.updateProduto = function (application, request, response) {
     }
 }
 
+module.exports.salvarInfoEmpresaVendedor = function (application, request, response) {
+    if (request.method == 'POST') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+
+        var params = {
+            id_vendedor: parseInt(request.body.id_vendedor),
+            salario_mensal: request.body.salario_mensal,
+            agencia_pagamento: request.body.agencia_pagamento,
+            conta_pagamento: request.body.conta_pagamento,
+            Cargo: request.body.Cargo,
+            status: parseInt(request.body.status),
+            dia_pagamento: request.body.dia_pagamento,
+            data_inicio_empresa: request.body.data_inicio_empresa,
+        };
+
+        filialModel.salvarInfoEmpresaVendedor(params, function (error, result) {
+            if (!result) {
+                console.log(error);
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+
 module.exports.realizarCompra = function (application, request, response) {
     if (request.method == 'POST') {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
-        
+
 
         var params = {
             numero_nota: parseInt(request.body.numero_nota),
@@ -366,18 +418,17 @@ module.exports.addProdutoCompra = function (application, request, response) {
     if (request.method == 'POST') {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
-        
+
 
         var params = {
-             id_compra: parseInt(request.body.numero_nota),
-             id_produto: parseInt(request.body.id_produto),
-             quantidade_comprada: parseInt(request.body.quantidade_comprada),
+            id_compra: parseInt(request.body.numero_nota),
+            id_produto: parseInt(request.body.id_produto),
+            quantidade: parseInt(request.body.quantidade_comprada),
         };
-
 
         filialModel.addProdutoCompra(params, function (error, result) {
             if (!result) {
-                // console.log(error);
+                console.log(error);
                 response.send({ success: true, response: false });
                 filialModel._connection.end();
             }
@@ -393,7 +444,7 @@ module.exports.cadastrarFuncionario = function (application, request, response) 
     if (request.method == 'POST') {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
-        
+
 
         var params = {
             idVendedor: parseInt(request.body.id),

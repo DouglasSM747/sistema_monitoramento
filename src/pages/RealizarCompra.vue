@@ -269,6 +269,7 @@ export default {
             quantidade_comprada: self.tabelaProdutos[i].quantidade_comprada
           })
           .then(function(response) {
+            console.log(response.data);
           })
           .catch(function(error) {
             console.log(error);

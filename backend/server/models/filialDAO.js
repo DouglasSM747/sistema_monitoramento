@@ -24,18 +24,29 @@ FilialDAO.prototype.Login = function(email, senha,callback) {
 	'SELECT * FROM gerente_pdv WHERE email ="'+email+'" AND senha = "'+senha+'";',callback);
 };
 //Buscar informacao de um pdv
+FilialDAO.prototype.getInfoEmpresaFuncionario = function(id_vendedor,callback) {
+	this._connection.query('SELECT * FROM teste.informacoes_empresariais_vendedor WHERE id_vendedor = '+id_vendedor, callback);
+};
+
+//Buscar informacao de um pdv
 FilialDAO.prototype.getInfo = function(idpdv,callback) {
 	this._connection.query('SELECT * FROM informacoes_pdv WHERE fk_id_PDV = '+idpdv, callback);
 };
 //Salva informacao de um pdv
-FilialDAO.prototype.saveInfo = function(params,callback) {
-	this._connection.query('UPDATE informacoes_pdv SET localizacao = "'+params.localizacao+'",nota =  "'+
-	params.nota+'",informacoes_PDVcol =  "'+params.informacoes_PDVcol+'",data_fundacao = "'+params.data_fundacao+'", preco_medio = "'+params.preco_medio+'",CESP = "'+params.CESP+'", telefone_fixo = "'+params.telefone_fixo+'", nome_dono_PDV = "'+params.nome_dono_PDV+'", nomepdv = "'+params.nomepdv+'" WHERE fk_id_PDV = '+params.fk_id_PDV, callback);
+FilialDAO.prototype.salvarInfoEmpresaVendedor = function(params,callback) {
+	this._connection.query('UPDATE teste.informacoes_empresariais_vendedor SET id_vendedor = '+params.id_vendedor+',salario_mensal =  "'+
+	params.salario_mensal+'",agencia_pagamento =  "'+params.agencia_pagamento+'",conta_pagamento = "'+params.conta_pagamento+'", Cargo = "'+params.Cargo+'", status = '+params.status+', dia_pagamento = "'+params.dia_pagamento+'", data_inicio_empresa = "'+params.data_inicio_empresa+'" WHERE id_vendedor = '+params.id_vendedor, callback);
 };
-//Apagar produto de forma logica
+//Atualizar info do vendedor EMPRESA
+FilialDAO.prototype.deleteProdutoL = function(params,callback) {
+	this._connection.query('UPDATE teste.informacoes_empresariais_vendedor SET ? where id_vendedor ',idpdv, callback);
+};
+
+//Deleta produto logicamente
 FilialDAO.prototype.deleteProdutoL = function(idpdv,id_produto,callback) {
 	this._connection.query('UPDATE estoque SET status = 0 WHERE id_produto = '+id_produto+' AND fk2_idPDV ='+idpdv, callback);
 };
+
 //Apagar produto de forma permanente
 FilialDAO.prototype.deleteProdutoF = function(idpdv,id_produto,callback) {
 	this._connection.query('UPDATE estoque SET status = -1 WHERE id_produto = '+id_produto+' AND fk2_idPDV ='+idpdv, callback);

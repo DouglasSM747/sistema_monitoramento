@@ -2,8 +2,8 @@ import DashboardLayoutGerente from "@/layout/dashboard/DashboardLayoutGerente.vu
 import DashboardLayouFuncionario from "@/layout/dashboard/DashboardLayouFuncionario.vue";
 // GeneralViews
 import NotFound from "@/pages/NotFoundPage.vue";
-
 // Admin pages
+const ProfileFun = () => import(/* webpackChunkName: "dashboard" */"@/pages//Profile/EditFuncionario.vue");
 const Funcionarios = () => import(/* webpackChunkName: "dashboard" */"@/pages/ListFun.vue");
 const Login = () => import(/* webpackChunkName: "dashboard" */"@/pages/Login.vue");
 const ReCompra = () => import(/* webpackChunkName: "dashboard" */"@/pages/RealizarCompra.vue");
@@ -55,6 +55,11 @@ const routes = [
         name: 'Funcionarios',
         components: { default: Funcionarios }
       },      
+      {
+        path: '/editfun',
+        name: 'Editar Funcionario',
+        components: { default: ProfileFun }
+      },
     ]
   },
   {

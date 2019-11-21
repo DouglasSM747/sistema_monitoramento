@@ -88,7 +88,7 @@
           <td class="text-center">{{row.idVendedor}}</td>
           <td class="text-center">{{row.email}}</td>
           <td class="td-actions text-center">
-            <base-button type="info" size="sm" icon v-on:click="abrirModalExclusao(row.id)">
+            <base-button type="info" size="sm" icon v-on:click="editarVendedor(row.idVendedor)">
               <i  class=" text-center tim-icons icon-simple-remove"></i>
             </base-button>
           </td>
@@ -101,7 +101,7 @@
 import { BaseTable } from "@/components";
 import axios from "axios";
 import swal from "sweetalert2";
-import { Modal } from "/home/douglas/Downloads/vue-black-dashboard-master/src/components";
+import { Modal } from "/home/douglas/Documentos/sistema_monitoramento/src/components";
 const Swal = require("sweetalert2");
 
 export default {
@@ -139,10 +139,6 @@ export default {
       });
   },
   methods: {
-
-    abrirModalExclusao(id){
-    this.remover_modal = true
-    },
     cadastrarFuncionario(){
         axios.post("http://localhost:5000/cadastrar/vendedor", {
           // Passa a informacoes do funcionario
@@ -158,6 +154,10 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
+    },
+    editarVendedor(id_vendedor){
+      window.localStorage.setItem("idvendedor",id_vendedor);
+      this.$router.push("/editfun"); // vai para a pagina de dono do PDV
     }
   }
 };
