@@ -4,7 +4,7 @@
       <div class="form-row">
         <base-input
           class="col-md-3"
-          v-model="data_compra"
+          v-model="getTempo"
           label="Data Compra"
           placeholder="xx/xx/xxxx"
         />
@@ -165,13 +165,18 @@ export default {
         console.log(error);
       });
   },
-  computed: {},
+  computed: {
+    getTempo: function() {
+      return new Date().toLocaleString();
+    }
+  },
   methods: {
     excluirProduto(item, valor) {
       var i = 0;
       for (i = 0; i < this.tabelaProdutos.length; i++) {
         if (this.tabelaProdutos[i].id == item) {
-          this.quantidade_total_compra -= valor * parseInt(this.tabelaProdutos[i].quantidade_comprada);
+          this.quantidade_total_compra -=
+            valor * parseInt(this.tabelaProdutos[i].quantidade_comprada);
 
           this.tabelaProdutos.pop(i);
           break;
@@ -222,10 +227,20 @@ export default {
     },
 
     attProduto(indice) {
-      if( this.quantidade_adicionada > 0 && this.quantidade_adicionada <= this.tabelaProdutos[indice].quantidade_disponivel){
-        this.tabelaProdutos[indice].quantidade_disponivel -= parseInt(this.quantidade_adicionada);
-        this.tabelaProdutos[indice].quantidade_comprada += parseInt (this.quantidade_adicionada);
-        this.quantidade_total_compra += parseInt(this.tabelaProdutos[indice].valor * this.quantidade_adicionada);
+      if (
+        this.quantidade_adicionada > 0 &&
+        this.quantidade_adicionada <=
+          this.tabelaProdutos[indice].quantidade_disponivel
+      ) {
+        this.tabelaProdutos[indice].quantidade_disponivel -= parseInt(
+          this.quantidade_adicionada
+        );
+        this.tabelaProdutos[indice].quantidade_comprada += parseInt(
+          this.quantidade_adicionada
+        );
+        this.quantidade_total_compra += parseInt(
+          this.tabelaProdutos[indice].valor * this.quantidade_adicionada
+        );
       }
     },
 
@@ -233,7 +248,9 @@ export default {
       produto.quantidade_disponivel -= parseInt(this.quantidade_adicionada);
       produto.quantidade_comprada = parseInt(this.quantidade_adicionada);
       this.tabelaProdutos.push(produto);
-      this.quantidade_total_compra += parseInt(produto.valor * this.quantidade_adicionada);
+      this.quantidade_total_compra += parseInt(
+        produto.valor * this.quantidade_adicionada
+      );
     },
     realizarCompra() {
       var self = this;
@@ -242,7 +259,7 @@ export default {
         .post("http://localhost:5000/realizar/compra", {
           // Passa a informacoes do produto
           quantidade_total_compra: this.quantidade_total_compra,
-          data_compra: this.data_compra,
+          data_compra: this.getTempo,
           numero_nota: this.numero_nota,
           nome_comprador: this.nome_comprador,
           fk_id_pdv_occorrente: this.fk_id_pdv_occorrente,
@@ -252,7 +269,7 @@ export default {
         })
         .then(function(response) {
           console.log("FOI");
-          self.addProdutoCompra();
+          // self.addProdutoCompra();
         })
         .catch(function(error) {
           console.log(error);
@@ -269,13 +286,12 @@ export default {
             quantidade_comprada: self.tabelaProdutos[i].quantidade_comprada
           })
           .then(function(response) {
-            console.log(response.data);
+            location.reload();
           })
           .catch(function(error) {
             console.log(error);
           });
       }
-      location.reload();
     }
   }
 };

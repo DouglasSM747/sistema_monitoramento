@@ -128,7 +128,8 @@ export default {
       columns: ["id", "name", "job", "since", "excluir"],
       tableData: [],
       produtoEdit: { id: "", quantidade: "", nome: "", valor: "" },
-      atual_pdv: window.localStorage.getItem("ID_PDV")
+      atual_pdv: window.localStorage.getItem("ID_PDV"),
+      tableDataAux: []
     };
   },
   mounted() {
@@ -139,8 +140,13 @@ export default {
       .get("http://localhost:5000/estoque/get?idpdv=" + self.atual_pdv) // get na API para mostrar todas os pdv
       .then(function(response) {
         for (var i = 0; i < response.data.response.length; i++) {
-          if (response.data.response[i].status == 1) {
+          //pega todos os produtos, mesmo apagados do sistema
+            self.tableDataAux.push({
+              id: response.data.response[i].id_produto,
+            });
+          if (response.data.response[i].status > 0) {         
             self.tableData.push({
+              //pega somente os produtos validos
               id_pdv: response.data.response[i].fk2_idPDV,
               quantidade: response.data.response[i].quantidade_estoque,
               id: response.data.response[i].id_produto,
@@ -163,8 +169,8 @@ export default {
 
     verificarAddEstoque(codigo_produto) {
       var achou = false;
-      for (var i = 0; i < this.tableData.length; i++) {
-        if (codigo_produto == this.tableData[i].id) {
+      for (var i = 0; i < this.tableDataAux.length; i++) {
+        if (codigo_produto == this.tableDataAux[i].id) {
           achou = true;
           break;
         }

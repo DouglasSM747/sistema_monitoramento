@@ -2,15 +2,17 @@
 <card>
   <base-table :data="tableData" :columns="columns">
     <template slot="columns">
-      <th class="text-center"> Data Compra</th>
       <th class="text-center">Numero Nota</th>
       <th class="text-center">Vendedor</th>
+      <th class="text-center">Comprador</th>
+      <th class="text-center"> Data Compra</th>
       <th class="text-right">Action</th>
     </template>
     <template slot-scope="{row}">
-      <td class="text-center">{{row.data_compra}}</td>
       <td class="text-center">{{row.numero_nota}}</td>
       <td class="text-center">{{row.vendedor}}</td>
+      <td class="text-center">{{row.nome_comprador}}</td>
+      <td class="text-center">{{row.data_compra}}</td>
       <td class="td-actions text-right">
         <base-button type="info" size="sm" icon v-on:click="IrParaPontodeVenda(row.numero_nota)">
           <i class="tim-icons icon-settings"></i>
@@ -43,7 +45,8 @@ export default {
           self.tableData.push({
             numero_nota: response.data.response[i].numero_nota,
             data_compra: response.data.response[i].data_compra,
-            vendedor: response.data.response[i].id_vendedor_responsavel
+            vendedor: response.data.response[i].id_vendedor_responsavel,
+            nome_comprador:response.data.response[i].nome_comprador
           });
         }
       })

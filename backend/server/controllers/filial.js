@@ -24,6 +24,7 @@ module.exports.getFuncionario = function (application, request, response) {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
         var idpdv = request.query.idpdv;
+
         filialModel.getFuncionario(idpdv, function (error, result) {
             if (!result) {
                 response.send({ success: true, response: false });
@@ -43,7 +44,7 @@ module.exports.getInfoEmpresaFuncionario = function (application, request, respo
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
         var id_vendedor = request.query.id_vendedor;
-
+    
         filialModel.getInfoEmpresaFuncionario(id_vendedor, function (error, result) {
             if (!result) {
                 console.log(error);
@@ -301,7 +302,7 @@ module.exports.saveInfo = function (application, request, response) {
             nome_dono_PDV: request.body.nome_dono_PDV,
             data_fundacao: request.body.data_fundacao,
             preco_medio: request.body.preco_medio,
-            CESP: request.body.nomepdv,
+            CESP: parseInt(request.body.CESP),
             telefone_fixo: request.body.telefone_fixo,
             informacoes_PDVcol: request.body.informacoes_PDVcol,
             fk_id_PDV: request.body.atual_pdv
@@ -367,7 +368,39 @@ module.exports.salvarInfoEmpresaVendedor = function (application, request, respo
             data_inicio_empresa: request.body.data_inicio_empresa,
         };
 
+
         filialModel.salvarInfoEmpresaVendedor(params, function (error, result) {
+            if (!result) {
+                console.log(error);
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+
+module.exports.CadastraInfoVendedorEmpresa = function (application, request, response) {
+    if (request.method == 'POST') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+
+        var params = {
+            id_vendedor: parseInt(request.body.id_vendedor),
+            salario_mensal: request.body.salario_mensal,
+            agencia_pagamento: request.body.agencia_pagamento,
+            conta_pagamento: request.body.conta_pagamento,
+            Cargo: request.body.Cargo,
+            status: parseInt(request.body.status),
+            dia_pagamento: request.body.dia_pagamento,
+            data_inicio_empresa: request.body.data_inicio_empresa,
+        };
+
+
+        filialModel.CadastraInfoVendedorEmpresa(params, function (error, result) {
             if (!result) {
                 console.log(error);
                 response.send({ success: true, response: false });
@@ -453,6 +486,8 @@ module.exports.cadastrarFuncionario = function (application, request, response) 
             email: request.body.email,
             senha: parseInt(request.body.senha)
         };
+
+
 
         filialModel.cadastrarFuncionario(params, function (error, result) {
             if (!result) {

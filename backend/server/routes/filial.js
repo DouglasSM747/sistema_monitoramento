@@ -32,6 +32,10 @@ module.exports = function (application) {
         application.server.controllers.filial.salvarInfoEmpresaVendedor(application, request, response);
     });
 
+    application.post('/infoempresa/salvar/vendedor/post/', function (request, response) {
+        application.server.controllers.filial.CadastraInfoVendedorEmpresa(application, request, response);
+    });
+
     application.get('/produtos/get/', function (request, response) {
         application.server.controllers.filial.getProdutos(application, request, response);
     });

@@ -47,7 +47,7 @@ CREATE TABLE `compra` (
 
 LOCK TABLES `compra` WRITE;
 /*!40000 ALTER TABLE `compra` DISABLE KEYS */;
-INSERT INTO `compra` VALUES (1,'13213',1,1,129,'Dinheiro','10',12312313),(123,'27/10/2019',1,1,NULL,NULL,NULL,NULL),(9898,'21/04/0001',1,1,10,'Dinheiro','João',10);
+INSERT INTO `compra` VALUES (0,'23/11/2019 10:14:20',93,1,164,'Dinheiro','Juca',5000),(1,'23/11/2019 10:17:37',93,1,123100,'Dinheiro','Cleber',2000),(10,'23/11/2019 10:10:04',93,1,4924,'Dinheiro','João',29),(123,'27/10/2019',1,1,NULL,'','Pietro',NULL),(212,'21',1,1,1293,'Dinheiro','Cesar',120),(881,'23/11/2019 10:02:53',9091,1,2470,'Dinheiro','Douglita',120),(9898,'21/04/0001',1,1,10,'Dinheiro','João',10),(12391,'27/10/2019',1,1,1234,'Dinheiro','Douglas',2000);
 /*!40000 ALTER TABLE `compra` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -77,7 +77,7 @@ CREATE TABLE `estoque` (
 
 LOCK TABLES `estoque` WRITE;
 /*!40000 ALTER TABLE `estoque` DISABLE KEYS */;
-INSERT INTO `estoque` VALUES (1,1,32,'Carvao',10,1),(1,5,34,'Cafe',2,1),(1,1123,37,'121',1231,1),(1,2000,190,'Pipoca',10,1),(1,34,343,'43',43,1),(1,10,500,'Ovo',10,-1),(1,199,12340,'Joao Queroga',1,1),(2,10,400,'Molho BBQ',14,1),(2,10,1234,'Pao',5,1);
+INSERT INTO `estoque` VALUES (1,100,32,'Marone',1,1),(1,100,34,'Cafe',2,1),(1,1123,37,'121',1231,1),(1,2000,190,'Pipoca',10,1),(1,34,343,'43',43,1),(1,10,500,'Ovo',10,1),(1,200,901,'Jujuba',2,-1),(1,199,12340,'Joao Queroga',1,1),(2,10,400,'Molho BBQ',14,1),(2,10,1234,'Pao',5,1);
 /*!40000 ALTER TABLE `estoque` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,6 +110,37 @@ INSERT INTO `gerente_pdv` VALUES (1,'Douglas Silva de Melo','21/04/1999','gerent
 UNLOCK TABLES;
 
 --
+-- Table structure for table `informacoes_empresariais_vendedor`
+--
+
+DROP TABLE IF EXISTS `informacoes_empresariais_vendedor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `informacoes_empresariais_vendedor` (
+  `id_vendedor` int(11) NOT NULL,
+  `salario_mensal` varchar(45) DEFAULT NULL,
+  `agencia_pagamento` varchar(45) DEFAULT NULL,
+  `conta_pagamento` varchar(45) DEFAULT NULL,
+  `Cargo` varchar(45) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `dia_pagamento` varchar(45) DEFAULT NULL,
+  `data_inicio_empresa` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id_vendedor`),
+  CONSTRAINT `fk_informacoes_empresariais_vendedor_1` FOREIGN KEY (`id_vendedor`) REFERENCES `vendedor` (`idVendedor`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `informacoes_empresariais_vendedor`
+--
+
+LOCK TABLES `informacoes_empresariais_vendedor` WRITE;
+/*!40000 ALTER TABLE `informacoes_empresariais_vendedor` DISABLE KEYS */;
+INSERT INTO `informacoes_empresariais_vendedor` VALUES (1,'900','4534','23813-8','Vendedor',1,'21','21/04/1999'),(92,'200','231','','Holy',1,'21','20/10/2017'),(93,'1000','123','32','32',32,'32','32'),(1234,'2000','3476','1237-8','Fun',1,'300','21/09/2019'),(9091,'5000','239','21314-8','Teste',1,'21','2017');
+/*!40000 ALTER TABLE `informacoes_empresariais_vendedor` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `informacoes_pdv`
 --
 
@@ -139,7 +170,7 @@ CREATE TABLE `informacoes_pdv` (
 
 LOCK TABLES `informacoes_pdv` WRITE;
 /*!40000 ALTER TABLE `informacoes_pdv` DISABLE KEYS */;
-INSERT INTO `informacoes_pdv` VALUES ('69093086','5','Rua Campa Queiroz ','21/04/1999','10','Internal','34509033',1,'Douglas Silva','Internal');
+INSERT INTO `informacoes_pdv` VALUES ('Amazonas','40','Rua Campa','21/04/2019','300','1239','92981976275',1,'Ponto De Venda','Ponto');
 /*!40000 ALTER TABLE `informacoes_pdv` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -224,7 +255,7 @@ CREATE TABLE `produto_comprado` (
 
 LOCK TABLES `produto_comprado` WRITE;
 /*!40000 ALTER TABLE `produto_comprado` DISABLE KEYS */;
-INSERT INTO `produto_comprado` VALUES (123,34,NULL),(123,1234,NULL),(9898,34,NULL);
+INSERT INTO `produto_comprado` VALUES (0,32,'50'),(0,34,'57'),(1,37,'100'),(10,37,'4'),(123,34,NULL),(123,1234,NULL),(212,32,'2'),(212,34,'1'),(212,37,'1'),(212,190,'4'),(881,32,'4'),(881,34,'2'),(881,37,'2'),(9898,34,NULL);
 /*!40000 ALTER TABLE `produto_comprado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -253,7 +284,7 @@ CREATE TABLE `vendedor` (
 
 LOCK TABLES `vendedor` WRITE;
 /*!40000 ALTER TABLE `vendedor` DISABLE KEYS */;
-INSERT INTO `vendedor` VALUES (1,1,'funcionario','vendedor1@gmail.com','1234');
+INSERT INTO `vendedor` VALUES (1,1,'funcionario','vendedor1@gmail.com','1234'),(92,1,'funcionario','vendedor7@gmail.com','1234'),(93,1,'funcionario','douglas@gmail.com','1234'),(123,1,'funcionario','vendedor4@gmail.com','1234'),(1234,1,'funcionario','douglas@gmail.com','1234'),(9091,1,'funcionario','vendedor3@gmail.com','1234');
 /*!40000 ALTER TABLE `vendedor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -274,4 +305,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-11-19 13:56:45
+-- Dump completed on 2019-11-23 13:14:39

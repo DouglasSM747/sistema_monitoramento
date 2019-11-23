@@ -3,6 +3,7 @@ import DashboardLayouFuncionario from "@/layout/dashboard/DashboardLayouFunciona
 // GeneralViews
 import NotFound from "@/pages/NotFoundPage.vue";
 // Admin pages
+const ProfileFunPessoal = () => import(/* webpackChunkName: "dashboard" */"@/pages//Profile/EditFuncionarioPessoal.vue");
 const ProfileFun = () => import(/* webpackChunkName: "dashboard" */"@/pages//Profile/EditFuncionario.vue");
 const Funcionarios = () => import(/* webpackChunkName: "dashboard" */"@/pages/ListFun.vue");
 const Login = () => import(/* webpackChunkName: "dashboard" */"@/pages/Login.vue");
@@ -72,6 +73,11 @@ const routes = [
         path: '/realizarcompra',
         name: 'Realizar Compra',
         components: { default: ReCompra }
+      },
+      {
+        path: '/informacao/pessoal',
+        name: 'Informação',
+        components: { default: ProfileFunPessoal}
       },
     ]
   },

@@ -7,11 +7,13 @@
       <template slot="columns">
         <th class="text-center">Numero Produto</th>
         <th class="text-center">Nome</th>
+        <th class="text-center">Quantidade</th>
         <th class="text-center">Valor</th>
       </template>
       <template slot-scope="{row}">
         <td class="text-center">{{row.id}}</td>
         <td class="text-center">{{row.num_produto}}</td>
+        <td class="text-center">{{row.quantidade}}</td>
         <td class="text-center">{{row.valor}}</td>
       </template>
     </base-table>
@@ -42,10 +44,11 @@ export default {
       .then(function(response) {
         for (var i = 0; i < response.data.response.length; i++) {
           // monta a lista de pdv
-          (self.valor_total += response.data.response[i].valor),
+          (self.valor_total += response.data.response[i].valor * response.data.response[i].quantidade),
             self.tableData.push({
               id: response.data.response[i].id_produto,
               num_produto: response.data.response[i].nome_produto,
+              quantidade: response.data.response[i].quantidade,
               valor: response.data.response[i].valor
             });
         }

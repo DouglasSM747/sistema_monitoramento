@@ -100,8 +100,11 @@
 <script>
 import { BaseTable } from "@/components";
 import axios from "axios";
+
 import swal from "sweetalert2";
+
 import { Modal } from "/home/douglas/Documentos/sistema_monitoramento/src/components";
+
 const Swal = require("sweetalert2");
 
 export default {
@@ -140,20 +143,35 @@ export default {
   },
   methods: {
     cadastrarFuncionario(){
-        axios.post("http://localhost:5000/cadastrar/vendedor", {
-          // Passa a informacoes do funcionario
-          fk_id_PDV_pertencente: this.atual_pdv,
-          tipo: 'funcionario',
-          email: this.vendedorEdit.email,
-          senha: this.vendedorEdit.senha,
-          id: this.vendedorEdit.idvendedor
-        })
-        .then(function(response) {
-        location.reload();
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+        var existe = false;
+        for(var i = 0; i < this.tableData.length;i++){
+          if(this.vendedorEdit.idvendedor == this.tableData[i].idVendedor){
+            existe = true;
+            break;
+          }
+        }
+        if(existe){
+            Swal.fire({
+              title: "Codigo já existe no Sistema",
+              confirmButtonText: "Ok"
+            });
+        }else{
+          axios.post("http://localhost:5000/cadastrar/vendedor", {
+            // Passa a informacoes do funcionario
+            fk_id_PDV_pertencente: this.atual_pdv,
+            tipo: 'funcionario',
+            email: this.vendedorEdit.email,
+            senha: this.vendedorEdit.senha,
+            id: this.vendedorEdit.idvendedor
+          })
+          .then(function(response) {
+          location.reload();
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+        }
+
     },
     editarVendedor(id_vendedor){
       window.localStorage.setItem("idvendedor",id_vendedor);

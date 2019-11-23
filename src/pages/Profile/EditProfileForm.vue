@@ -76,8 +76,7 @@ export default {
           (self.preco_medio = response.data.response[0].preco_medio),
           (self.CESP = response.data.response[0].CESP),
           (self.telefone_fixo = response.data.response[0].telefone_fixo),
-          (self.informacoes_PDVcol =
-            response.data.response[0].informacoes_PDVcol);
+          (self.informacoes_PDVcol = response.data.response[0].informacoes_PDVcol);
       })
       .catch(function(error) {
         console.log(error);
@@ -99,7 +98,7 @@ export default {
           informacoes_PDVcol: this.informacoes_PDVcol
         })
         .then(function(response) {
-          console.log(response.data);
+          location.reload();
         })
         .catch(function(error) {
           console.log(error);

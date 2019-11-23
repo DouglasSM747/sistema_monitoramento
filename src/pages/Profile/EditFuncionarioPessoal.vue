@@ -4,16 +4,16 @@
     <div class="row">
       <div class="col-md-5 pr-md-1">
         <base-input
-          label="Codigo Do Vendedor"
-          placeholder="Codigo Do Vendedor"
+          label="Nome Do Funcionario"
+          placeholder="Nome Do Funcionario"
           v-model="vendedor_edit.id_vendedor"
           disabled
         ></base-input>
       </div>
       <div class="col-md-5 px-md-1">
         <base-input
-          label="Salario Mensal"
-          placeholder="Salario Mensal"
+          label="Data de Nascimento"
+          placeholder="Data de Nascimento"
           v-model="vendedor_edit.salario_mensal"
         ></base-input>
       </div>
@@ -21,9 +21,9 @@
     <div class="row">
       <div class="col-md-5 pr-md-1">
         <base-input
-          label="Agencia Pagamento"
+          label="Quantidade de Vendas"
           v-model="vendedor_edit.agencia_pagamento"
-          placeholder="Agencia Pagamento"
+          placeholder="Quantidade de Vendas"
         ></base-input>
       </div>
       <div class="col-md-5 pr-md-1">

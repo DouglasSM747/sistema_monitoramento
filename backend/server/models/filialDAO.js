@@ -33,9 +33,20 @@ FilialDAO.prototype.getInfo = function(idpdv,callback) {
 	this._connection.query('SELECT * FROM informacoes_pdv WHERE fk_id_PDV = '+idpdv, callback);
 };
 //Salva informacao de um pdv
+FilialDAO.prototype.saveInfo = function(params,callback) {
+	this._connection.query('UPDATE informacoes_pdv SET localizacao = "'+params.localizacao+'",nota =  "'+
+	params.nota+'",informacoes_PDVcol =  "'+params.informacoes_PDVcol+'",data_fundacao = "'+params.data_fundacao+'", preco_medio = "'+params.preco_medio+'",CESP = "'+params.CESP+'", telefone_fixo = "'+params.telefone_fixo+'", nome_dono_PDV = "'+params.nome_dono_PDV+'", nomepdv = "'+params.nomepdv+'" WHERE fk2_idPDV = '+params.fk_id_PDV, callback);
+};
+//Salva informacao empresarial Vendedor
 FilialDAO.prototype.salvarInfoEmpresaVendedor = function(params,callback) {
 	this._connection.query('UPDATE teste.informacoes_empresariais_vendedor SET id_vendedor = '+params.id_vendedor+',salario_mensal =  "'+
 	params.salario_mensal+'",agencia_pagamento =  "'+params.agencia_pagamento+'",conta_pagamento = "'+params.conta_pagamento+'", Cargo = "'+params.Cargo+'", status = '+params.status+', dia_pagamento = "'+params.dia_pagamento+'", data_inicio_empresa = "'+params.data_inicio_empresa+'" WHERE id_vendedor = '+params.id_vendedor, callback);
+};
+
+//cadastra informacao de um pdv
+FilialDAO.prototype.CadastraInfoVendedorEmpresa = function(params,callback) {
+	this._connection.query('INSERT INTO teste.informacoes_empresariais_vendedor SET id_vendedor = '+params.id_vendedor+',salario_mensal =  "'+
+	params.salario_mensal+'",agencia_pagamento =  "'+params.agencia_pagamento+'",conta_pagamento = "'+params.conta_pagamento+'", Cargo = "'+params.Cargo+'", status = '+params.status+', dia_pagamento = "'+params.dia_pagamento+'", data_inicio_empresa = "'+params.data_inicio_empresa+'"', callback);
 };
 //Atualizar info do vendedor EMPRESA
 FilialDAO.prototype.deleteProdutoL = function(params,callback) {
