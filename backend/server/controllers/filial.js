@@ -4,9 +4,9 @@ module.exports.getCompra = function (application, request, response) {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
         var idpdv = request.query.idpdv;
-
         filialModel.getCompra(idpdv, function (error, result) {
             if (!result) {
+                
                 response.send({ success: true, response: false });
                 filialModel._connection.end();
             }
@@ -368,6 +368,7 @@ module.exports.salvarInfoEmpresaVendedor = function (application, request, respo
             data_inicio_empresa: request.body.data_inicio_empresa,
         };
 
+        console.log(params);
 
         filialModel.salvarInfoEmpresaVendedor(params, function (error, result) {
             if (!result) {
@@ -418,7 +419,6 @@ module.exports.realizarCompra = function (application, request, response) {
     if (request.method == 'POST') {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
-
 
         var params = {
             numero_nota: parseInt(request.body.numero_nota),
@@ -492,6 +492,82 @@ module.exports.cadastrarFuncionario = function (application, request, response) 
         filialModel.cadastrarFuncionario(params, function (error, result) {
             if (!result) {
                 console.log(error);
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+
+module.exports.CadastraInfoVendedorPessoal = function (application, request, response) {
+    if (request.method == 'POST') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+
+
+        var params = {
+            fk_id_vendedor: parseInt(request.body.fk_id_vendedor),
+            nome: request.body.nome,
+            sexo: request.body.sexo,
+            data_nascimento: request.body.data_nascimento
+        };
+
+        filialModel.CadastraInfoVendedorPessoal(params, function (error, result) {
+            if (!result) {
+                console.log(error);
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+
+
+module.exports.salvarInfoPessoalVendedor = function (application, request, response) {
+    if (request.method == 'POST') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+
+
+        var params = {
+            fk_id_vendedor: parseInt(request.body.fk_id_vendedor),
+            nome: request.body.nome,
+            sexo: request.body.sexo,
+            data_nascimento: request.body.data_nascimento
+        };
+        
+        filialModel.salvarInfoPessoalVendedor(params, function (error, result) {
+            if (!result) {
+                console.log(error);
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+
+
+module.exports.getFuncionarioInfoPessoal = function (application, request, response) {
+
+    if (request.method == 'GET') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+        var fk_id_vendedor = request.query.fk_id_vendedor;
+
+        filialModel.getFuncionarioInfoPessoal(fk_id_vendedor, function (error, result) {
+            if (!result) {
                 response.send({ success: true, response: false });
                 filialModel._connection.end();
             }

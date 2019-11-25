@@ -3,6 +3,7 @@ module.exports = function (application) {
     application.get('/compra/get/', function (request, response) {
         application.server.controllers.filial.getCompra(application, request, response);
     });
+    
 
     application.get('/vendedor/get/', function (request, response) {
         application.server.controllers.filial.getFuncionario(application, request, response);
@@ -28,6 +29,10 @@ module.exports = function (application) {
         application.server.controllers.filial.cadastrarFuncionario(application, request, response);
     });
 
+    application.get('/produtos/get/', function (request, response) {
+        application.server.controllers.filial.getProdutos(application, request, response);	        
+    });
+
     application.post('/infoempresa/vendedor/post/', function (request, response) {
         application.server.controllers.filial.salvarInfoEmpresaVendedor(application, request, response);
     });
@@ -36,8 +41,16 @@ module.exports = function (application) {
         application.server.controllers.filial.CadastraInfoVendedorEmpresa(application, request, response);
     });
 
-    application.get('/produtos/get/', function (request, response) {
-        application.server.controllers.filial.getProdutos(application, request, response);
+    application.post('/infopessoal/cadastrar/vendedor/post/', function (request, response) {
+        application.server.controllers.filial.CadastraInfoVendedorPessoal(application, request, response);
+    });
+
+    application.post('/infopessoal/salvar/vendedor/post/', function (request, response) {
+        application.server.controllers.filial.salvarInfoPessoalVendedor(application, request, response);
+    });
+
+    application.get('/infopessoal/get/', function (request, response) {
+        application.server.controllers.filial.getFuncionarioInfoPessoal(application, request, response);
     });
 
     application.get('/estoque/get/', function (request, response) {

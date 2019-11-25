@@ -35,7 +35,7 @@ FilialDAO.prototype.getInfo = function(idpdv,callback) {
 //Salva informacao de um pdv
 FilialDAO.prototype.saveInfo = function(params,callback) {
 	this._connection.query('UPDATE informacoes_pdv SET localizacao = "'+params.localizacao+'",nota =  "'+
-	params.nota+'",informacoes_PDVcol =  "'+params.informacoes_PDVcol+'",data_fundacao = "'+params.data_fundacao+'", preco_medio = "'+params.preco_medio+'",CESP = "'+params.CESP+'", telefone_fixo = "'+params.telefone_fixo+'", nome_dono_PDV = "'+params.nome_dono_PDV+'", nomepdv = "'+params.nomepdv+'" WHERE fk2_idPDV = '+params.fk_id_PDV, callback);
+	params.nota+'",informacoes_PDVcol =  "'+params.informacoes_PDVcol+'",data_fundacao = "'+params.data_fundacao+'", preco_medio = "'+params.preco_medio+'",CESP = "'+params.CESP+'", telefone_fixo = "'+params.telefone_fixo+'", nome_dono_PDV = "'+params.nome_dono_PDV+'", nomepdv = "'+params.nomepdv+'" WHERE fk_id_PDV = '+params.fk_id_PDV, callback);
 };
 //Salva informacao empresarial Vendedor
 FilialDAO.prototype.salvarInfoEmpresaVendedor = function(params,callback) {
@@ -43,14 +43,15 @@ FilialDAO.prototype.salvarInfoEmpresaVendedor = function(params,callback) {
 	params.salario_mensal+'",agencia_pagamento =  "'+params.agencia_pagamento+'",conta_pagamento = "'+params.conta_pagamento+'", Cargo = "'+params.Cargo+'", status = '+params.status+', dia_pagamento = "'+params.dia_pagamento+'", data_inicio_empresa = "'+params.data_inicio_empresa+'" WHERE id_vendedor = '+params.id_vendedor, callback);
 };
 
-//cadastra informacao de um pdv
+//cadastra informacao empresarial de funcionario
 FilialDAO.prototype.CadastraInfoVendedorEmpresa = function(params,callback) {
 	this._connection.query('INSERT INTO teste.informacoes_empresariais_vendedor SET id_vendedor = '+params.id_vendedor+',salario_mensal =  "'+
 	params.salario_mensal+'",agencia_pagamento =  "'+params.agencia_pagamento+'",conta_pagamento = "'+params.conta_pagamento+'", Cargo = "'+params.Cargo+'", status = '+params.status+', dia_pagamento = "'+params.dia_pagamento+'", data_inicio_empresa = "'+params.data_inicio_empresa+'"', callback);
 };
+
 //Atualizar info do vendedor EMPRESA
 FilialDAO.prototype.deleteProdutoL = function(params,callback) {
-	this._connection.query('UPDATE teste.informacoes_empresariais_vendedor SET ? where id_vendedor ',idpdv, callback);
+	this._connection.query('UPDATE teste.informacoes_empresariais_vendedor SET ? where id_vendedor = '+idpdv,params, callback);
 };
 
 //Deleta produto logicamente
@@ -80,37 +81,28 @@ FilialDAO.prototype.getEstoque = function(idpdv1,callback) {
 FilialDAO.prototype.getProdutos = function(idcompra,callback) {
 	this._connection.query('SELECT * FROM teste.produto_comprado, teste.estoque WHERE id_compra = '+idcompra+' AND produto_comprado.id_produto = estoque.id_produto', callback);
 };
-//----------------------------------------------------------------------------//
-FilialDAO.prototype.saveFilial = function(params, callback) {
-	this._connection.query('INSERT INTO elg_filial SET ?', params, callback);
+
+//salvar informação pessoal funcionaro
+FilialDAO.prototype.salvarInfoPessoalVendedor = function(params,callback) {
+	this._connection.query('UPDATE teste.informacoes_vendedor SET fk_id_vendedor = '+params.fk_id_vendedor+',nome =  "'+
+	params.nome+'",sexo =  "'+params.sexo+'",data_nascimento = "'+params.data_nascimento+'" WHERE fk_id_vendedor = '+params.fk_id_vendedor, callback);
+};
+
+//cadastra informacao pessoal de um funcionario
+FilialDAO.prototype.CadastraInfoVendedorPessoal = function(params,callback) {
+	this._connection.query('INSERT INTO teste.informacoes_vendedor SET fk_id_vendedor = '+params.fk_id_vendedor+',sexo =  "'+
+	params.sexo+'",data_nascimento =  "'+params.data_nascimento+'",fk_id_vendedor = "'+params.fk_id_vendedor+'"', callback);
+};
+
+//get Informação Pessoal funcionario
+FilialDAO.prototype.getFuncionarioInfoPessoal = function(fk_id_vendedor,callback) {
+	this._connection.query('SELECT * FROM teste.informacoes_vendedor WHERE fk_id_vendedor = '+fk_id_vendedor, callback);
 };
 
 //----------------------------------------------------------------------------//
 FilialDAO.prototype.addProdutoCompra = function(params, callback) {
-	this._connection.query('INSERT INTO produto_comprado SET ?', params, callback);
-};
-
-FilialDAO.prototype.simpleSearchFilial = function(nome, callback) {
-	this._connection.query('SELECT * FROM elg_filial WHERE status = 1 AND nome LIKE "%' + nome +'%"', callback);
-};
-
-FilialDAO.prototype.advancedSearchFilial = function(params, callback) {
-	this._connection.query('SELECT * FROM elg_filial WHERE status = ' + params.status + ' AND sistema_tributacao_id = ' + params.tributacao + 
-	' AND bairro LIKE "%' + params.bairro +'%" ORDER BY nome ' + params.ordem, callback);
-};
-
-FilialDAO.prototype.deleteFilial = function(id, callback) {
-	this._connection.query('UPDATE elg_filial SET status = 0 WHERE id = ' + id, callback);
-};
-
-FilialDAO.prototype.updateFilial = function(params, callback) {
-	this._connection.query('UPDATE elg_filial SET nome = "' + params.nome + '"' + ' , telefone_fixo = "' + params.telefone_fixo +'"'+
-	' , cnpj = "' + params.cnpj +'"' + ' , inscricao_estadual = "' + params.inscricao_estadual +'"' + ' , filial_tipo = ' + params.filial_tipo
-	+ ' , sistema_tributacao_id = ' + params.sistema_tributacao_id + ' , sefaz_chave_seguranca = "' + params.sefaz_chave_seguranca +'"'
-	+ ' , status = "' + params.status +'"' + ' , cep = "' + params.cep +'"' + ' , bairro = "' + params.bairro +'"' + ' , pais = "' + params.pais +'"'
-	+ ' , cidade = "' + params.cidade +'"' + ' , uf = "' + params.uf +'"' + ' , rua = "' + params.rua +'"' + ' , numero = "' + params.numero +'"'
-	+ ' , complemento = "' + params.complemento + '"' + ' , latitude = ' + params.latitude + ' , longitude = ' + params.longitude
-	+ ' WHERE id = ' + params.id, callback);
+	this._connection.query('INSERT INTO produto_comprado SET ?'+
+	'; UPDATE teste.estoque SET quantidade_estoque = (quantidade_estoque -'+params.quantidade+')', params, callback);
 };
 
 module.exports = function() {

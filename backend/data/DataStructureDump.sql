@@ -47,7 +47,7 @@ CREATE TABLE `compra` (
 
 LOCK TABLES `compra` WRITE;
 /*!40000 ALTER TABLE `compra` DISABLE KEYS */;
-INSERT INTO `compra` VALUES (0,'23/11/2019 10:14:20',93,1,164,'Dinheiro','Juca',5000),(1,'23/11/2019 10:17:37',93,1,123100,'Dinheiro','Cleber',2000),(10,'23/11/2019 10:10:04',93,1,4924,'Dinheiro','João',29),(123,'27/10/2019',1,1,NULL,'','Pietro',NULL),(212,'21',1,1,1293,'Dinheiro','Cesar',120),(881,'23/11/2019 10:02:53',9091,1,2470,'Dinheiro','Douglita',120),(9898,'21/04/0001',1,1,10,'Dinheiro','João',10),(12391,'27/10/2019',1,1,1234,'Dinheiro','Douglas',2000);
+INSERT INTO `compra` VALUES (0,'23/11/2019 10:14:20',93,1,164,'Dinheiro','Juca',5000),(1,'23/11/2019 10:17:37',93,1,123100,'Dinheiro','Cleber',2000),(10,'23/11/2019 10:10:04',93,1,4924,'Dinheiro','João',29),(23,'25/11/2019 09:26:43',1,1,4,'Cartao Debito','Cleber',0),(24,'25/11/2019 09:30:03',1,1,20,'Dinheiro','Cleber',100),(25,'25/11/2019 09:33:24',1,1,100,'Dinheiro','Heitor',300),(26,'25/11/2019 09:36:58',1,1,0,'Cartao Debito','Cleber',0),(27,'25/11/2019 09:38:33',1,1,20,'Cartao Debito','Cues',0),(29,'25/11/2019 09:45:15',1,1,200,'Cartao Debito','Cleison',200),(30,'25/11/2019 09:45:41',1,1,20,'Cartao Debito','Teste',20),(31,'25/11/2019 09:58:32',1,1,2,'Cartao Debito','Cleuson',2),(32,'25/11/2019 09:59:44',1,1,4,'Cartao Debito','Douglas',4),(123,'27/10/2019',1,1,NULL,'','Pietro',NULL),(212,'21',1,1,1293,'Dinheiro','Cesar',120),(881,'23/11/2019 10:02:53',9091,1,2470,'Dinheiro','Douglita',120),(909,'25/11/2019 09:19:21',1,1,4,'Dinheiro','Douglas',1),(9898,'21/04/0001',1,1,10,'Dinheiro','João',10),(12391,'27/10/2019',1,1,1234,'Dinheiro','Douglas',2000);
 /*!40000 ALTER TABLE `compra` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -77,7 +77,7 @@ CREATE TABLE `estoque` (
 
 LOCK TABLES `estoque` WRITE;
 /*!40000 ALTER TABLE `estoque` DISABLE KEYS */;
-INSERT INTO `estoque` VALUES (1,100,32,'Marone',1,1),(1,100,34,'Cafe',2,1),(1,1123,37,'121',1231,1),(1,2000,190,'Pipoca',10,1),(1,34,343,'43',43,1),(1,10,500,'Ovo',10,1),(1,200,901,'Jujuba',2,-1),(1,199,12340,'Joao Queroga',1,1),(2,10,400,'Molho BBQ',14,1),(2,10,1234,'Pao',5,1);
+INSERT INTO `estoque` VALUES (1,97,32,'Marone',1,1),(1,97,34,'Cafe',2,1),(1,1120,37,'121',1231,1),(1,1997,190,'Pipoca',10,1),(1,31,343,'43',43,1),(1,7,500,'Ovo',10,1),(1,197,901,'Jujuba',2,-1),(1,196,12340,'Joao Queroga',1,1),(2,7,400,'Molho BBQ',14,1),(2,7,1234,'Pao',5,1);
 /*!40000 ALTER TABLE `estoque` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -105,7 +105,7 @@ CREATE TABLE `gerente_pdv` (
 
 LOCK TABLES `gerente_pdv` WRITE;
 /*!40000 ALTER TABLE `gerente_pdv` DISABLE KEYS */;
-INSERT INTO `gerente_pdv` VALUES (1,'Douglas Silva de Melo','21/04/1999','gerente',NULL,NULL);
+INSERT INTO `gerente_pdv` VALUES (1,'Douglas Silva de Melo','21/04/1999','gerente','douglas_gerente@gmail.com','124');
 /*!40000 ALTER TABLE `gerente_pdv` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -170,7 +170,7 @@ CREATE TABLE `informacoes_pdv` (
 
 LOCK TABLES `informacoes_pdv` WRITE;
 /*!40000 ALTER TABLE `informacoes_pdv` DISABLE KEYS */;
-INSERT INTO `informacoes_pdv` VALUES ('Amazonas','40','Rua Campa','21/04/2019','300','1239','92981976275',1,'Ponto De Venda','Ponto');
+INSERT INTO `informacoes_pdv` VALUES ('Amazonas','40','Rua Campa','21/04/2019','2','1239','92981976275',1,'Carlos Jose','Ponto');
 /*!40000 ALTER TABLE `informacoes_pdv` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -184,7 +184,7 @@ DROP TABLE IF EXISTS `informacoes_vendedor`;
 CREATE TABLE `informacoes_vendedor` (
   `nome` varchar(45) NOT NULL,
   `sexo` varchar(45) DEFAULT NULL,
-  `data_nascimento` datetime DEFAULT NULL,
+  `data_nascimento` varchar(20) DEFAULT NULL,
   `fk_id_vendedor` int(11) NOT NULL,
   PRIMARY KEY (`fk_id_vendedor`),
   CONSTRAINT `fk_id_vendedor` FOREIGN KEY (`fk_id_vendedor`) REFERENCES `vendedor` (`idVendedor`)
@@ -197,7 +197,7 @@ CREATE TABLE `informacoes_vendedor` (
 
 LOCK TABLES `informacoes_vendedor` WRITE;
 /*!40000 ALTER TABLE `informacoes_vendedor` DISABLE KEYS */;
-INSERT INTO `informacoes_vendedor` VALUES ('Jelnison','M',NULL,1);
+INSERT INTO `informacoes_vendedor` VALUES ('Jelnison','F','21/04/2000',1);
 /*!40000 ALTER TABLE `informacoes_vendedor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -255,7 +255,7 @@ CREATE TABLE `produto_comprado` (
 
 LOCK TABLES `produto_comprado` WRITE;
 /*!40000 ALTER TABLE `produto_comprado` DISABLE KEYS */;
-INSERT INTO `produto_comprado` VALUES (0,32,'50'),(0,34,'57'),(1,37,'100'),(10,37,'4'),(123,34,NULL),(123,1234,NULL),(212,32,'2'),(212,34,'1'),(212,37,'1'),(212,190,'4'),(881,32,'4'),(881,34,'2'),(881,37,'2'),(9898,34,NULL);
+INSERT INTO `produto_comprado` VALUES (0,32,'50'),(0,34,'57'),(1,37,'100'),(10,37,'4'),(23,34,'2'),(24,34,'10'),(25,34,'50'),(26,34,'200'),(27,34,'10'),(29,34,'100'),(31,34,'1'),(32,34,'2'),(123,34,NULL),(123,1234,NULL),(212,32,'2'),(212,34,'1'),(212,37,'1'),(212,190,'4'),(881,32,'4'),(881,34,'2'),(881,37,'2'),(9898,34,NULL);
 /*!40000 ALTER TABLE `produto_comprado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -305,4 +305,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-11-23 13:14:39
+-- Dump completed on 2019-11-25 15:42:44

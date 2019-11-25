@@ -81,6 +81,24 @@ const routes = [
       },
     ]
   },
+  {
+    path: '/gerente',
+    component: DashboardLayouFuncionario,
+    redirect: '/realizarcompra',
+    name: 'FUNCIONARIO PONTO DE VENDAS',
+    children: [
+      {
+        path: '/realizarcompra',
+        name: 'Realizar Compra',
+        components: { default: ReCompra }
+      },
+      {
+        path: '/informacao/pessoal',
+        name: 'Informação',
+        components: { default: ProfileFunPessoal}
+      },
+    ]
+  },
   { path: '*', component: NotFound }
 ];
 

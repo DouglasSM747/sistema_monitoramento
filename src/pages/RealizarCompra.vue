@@ -43,27 +43,19 @@
       </div>
       <div class="form-row">
         <!-- codigo do produto a ser adicionado -->
-        <input
-          slot="header"
+        <base-input
+          class="col-md-5"
           v-model="produto_adicionado"
-          type="text"
-          dark="true"
-          hide-details="true"
-          class="form-control"
-          id="inlineFormInputGroup"
-          placeholder="Digite aqui o numero do produto para ser adicionado"
+          label="Digite aqui o numero do produto para ser adicionado"
           v-on:keyup.enter="verificarProdutoNaTabela(produto_adicionado)"
+          placeholder="0"
         />
         <!-- Quantidade do produto a ser adicionado -->
-        <input
-          slot="header"
+        <base-input
+          class="col-md-5"
           v-model="quantidade_adicionada"
-          type="text"
-          dark="true"
-          hide-details="true"
-          class="form-control"
-          id="inlineFormInputGroup"
-          placeholder="Digite aqui a quantidade a ser adicionado"
+          label="Digite aqui a quantidade a ser adicionado"
+          placeholder="0"
           v-on:keyup.enter="verificarProdutoNaTabela(produto_adicionado)"
         />
       </div>
@@ -106,6 +98,8 @@
 <script>
 import { BaseTable } from "@/components";
 import axios from "axios";
+import swal from "sweetalert2";
+const Swal = require("sweetalert2");
 export default {
   components: {
     BaseTable
@@ -123,7 +117,7 @@ export default {
       data_compra: "",
       numero_nota: "",
       nome_comprador: "",
-      valor_pago: "",
+      valor_pago: 0,
       fk_id_pdv_occorrente: window.localStorage.getItem("ID_PDV"),
       id_vendedor_responsavel: window.localStorage.getItem("ID_VENDEDOR"),
       compra: [
@@ -245,35 +239,84 @@ export default {
     },
 
     addProduto(produto) {
-      produto.quantidade_disponivel -= parseInt(this.quantidade_adicionada);
-      produto.quantidade_comprada = parseInt(this.quantidade_adicionada);
-      this.tabelaProdutos.push(produto);
-      this.quantidade_total_compra += parseInt(
-        produto.valor * this.quantidade_adicionada
-      );
+      //se n tem a quantidade no sistema
+      if(produto.quantidade_disponivel >= this.quantidade_adicionada){
+        produto.quantidade_disponivel -= parseInt(this.quantidade_adicionada);
+        produto.quantidade_comprada = parseInt(this.quantidade_adicionada);
+        this.tabelaProdutos.push(produto);
+        this.quantidade_total_compra += parseInt(produto.valor * this.quantidade_adicionada);
+      }
     },
     realizarCompra() {
-      var self = this;
-      // se o produto n tem, adiciona no sistema
-      axios
-        .post("http://localhost:5000/realizar/compra", {
-          // Passa a informacoes do produto
-          quantidade_total_compra: this.quantidade_total_compra,
-          data_compra: this.getTempo,
-          numero_nota: this.numero_nota,
-          nome_comprador: this.nome_comprador,
-          fk_id_pdv_occorrente: this.fk_id_pdv_occorrente,
-          forma_pagamento: this.selected,
-          id_vendedor_responsavel: this.id_vendedor_responsavel,
-          valor_pago: this.valor_pago
-        })
-        .then(function(response) {
-          console.log("FOI");
-          // self.addProdutoCompra();
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+      if (this.tabelaProdutos.length > 0) {
+        if (
+          this.selected == "Dinheiro" &&
+          this.valor_pago < this.quantidade_total_compra
+        ) {
+          Swal.fire({
+            title: "Valor Pago Menor Que o Da Compra",
+            confirmButtonText: "Ok"
+          });
+        } else {
+          var self = this;
+          if(this.selected != 'Dinheiro'){
+            this.valor_pago = this.quantidade_total_compra;
+          }
+          if (
+            this.selected == "Dinheiro" &&
+            this.valor_pago > this.quantidade_total_compra
+          ) {
+            Swal.fire({
+              title: "Troco",
+              text: this.valor_pago - this.quantidade_total_compra,
+              confirmButtonColor: "#3085d6",
+              confirmButtonText: "Ok!"
+            }).then(result => {
+              if (result.value) {
+                // caso necessite de troco
+                axios
+                  .post("http://localhost:5000/realizar/compra", {
+                    // Passa a informacoes do produto
+                    quantidade_total_compra: this.quantidade_total_compra,
+                    data_compra: this.getTempo,
+                    numero_nota: this.numero_nota,
+                    nome_comprador: this.nome_comprador,
+                    fk_id_pdv_occorrente: this.fk_id_pdv_occorrente,
+                    forma_pagamento: this.selected,
+                    id_vendedor_responsavel: this.id_vendedor_responsavel,
+                    valor_pago: this.valor_pago
+                  })
+                  .then(function(response) {
+                    self.addProdutoCompra();
+                  })
+                  .catch(function(error) {
+                    console.log(error);
+                  });
+              }
+            });
+          } else {
+            // // caso não necessite de troco
+            axios
+              .post("http://localhost:5000/realizar/compra", {
+                // Passa a informacoes do produto
+                quantidade_total_compra: this.quantidade_total_compra,
+                data_compra: this.getTempo,
+                numero_nota: this.numero_nota,
+                nome_comprador: this.nome_comprador,
+                fk_id_pdv_occorrente: this.fk_id_pdv_occorrente,
+                forma_pagamento: this.selected,
+                id_vendedor_responsavel: this.id_vendedor_responsavel,
+                valor_pago: this.valor_pago
+              })
+              .then(function(response) {
+                self.addProdutoCompra();
+              })
+              .catch(function(error) {
+                console.log(error);
+              });
+          }
+        }
+      }
     },
     addProdutoCompra() {
       var self = this;

@@ -57,6 +57,7 @@ export default {
         });
     },
     AcessarTipoConta(dadosUsuario) {
+
       if (dadosUsuario.tipo == "funcionario") {
         window.localStorage.setItem("ID_PDV",dadosUsuario.fk_id_PDV_pertencente);
         window.localStorage.setItem("ID_VENDEDOR",dadosUsuario.idVendedor);
@@ -64,7 +65,9 @@ export default {
       } else if (dadosUsuario.tipo == "adm") {
         window.localStorage.setItem("ID_PDV",dadosUsuario.idPDV);
         this.$router.push("/dono"); // vai para a pagina de dono do PDV
-      } else {
+      } else if (dadosUsuario.tipo == "gerente") {
+        window.localStorage.setItem("ID_GERENTE",dadosUsuario.idPDV);
+        // this.$router.push("/dono"); // vai para a pagina de dono do PDV
       }
     }
   }

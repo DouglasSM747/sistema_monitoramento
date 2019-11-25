@@ -6,7 +6,7 @@
         <base-input
           label="Nome Do Funcionario"
           placeholder="Nome Do Funcionario"
-          v-model="vendedor_edit.id_vendedor"
+          v-model="vendedor_edit.nome"
           disabled
         ></base-input>
       </div>
@@ -14,45 +14,16 @@
         <base-input
           label="Data de Nascimento"
           placeholder="Data de Nascimento"
-          v-model="vendedor_edit.salario_mensal"
+          v-model="vendedor_edit.data_nascimento"
         ></base-input>
       </div>
     </div>
     <div class="row">
       <div class="col-md-5 pr-md-1">
         <base-input
-          label="Quantidade de Vendas"
-          v-model="vendedor_edit.agencia_pagamento"
+          label="Sexo"
+          v-model="vendedor_edit.sexo"
           placeholder="Quantidade de Vendas"
-        ></base-input>
-      </div>
-      <div class="col-md-5 pr-md-1">
-        <base-input
-          label="Conta Pagamento"
-          v-model="vendedor_edit.conta_pagamento"
-          placeholder="Agencia Pagamento"
-        ></base-input>
-      </div>
-      <div class="col-md-5">
-        <base-input label="Status" v-model="vendedor_edit.status" placeholder="Status"></base-input>
-      </div>
-      <div class="col-md-5 pl-md-1">
-        <base-input label="Cargo" v-model="vendedor_edit.Cargo" placeholder="Cargo"></base-input>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-5">
-        <base-input
-          label="Data de Pagamento"
-          v-model="vendedor_edit.dia_pagamento"
-          placeholder="Data Pagamento"
-        ></base-input>
-      </div>
-      <div class="col-md-5">
-        <base-input
-          label="Data Inicio PDV"
-          v-model="vendedor_edit.data_inicio_empresa"
-          placeholder="Data de Ingresso no Ponto de Venda"
         ></base-input>
       </div>
     </div>
@@ -68,14 +39,10 @@ export default {
   data() {
     return {
       vendedor_edit: {
-        id_vendedor: window.localStorage.getItem("idvendedor"),
-        salario_mensal: 0,
-        agencia_pagamento: "",
-        conta_pagamento: "",
-        Cargo: "",
-        status: 0,
-        dia_pagamento: "",
-        data_inicio_empresa: ""
+        fk_id_vendedor: window.localStorage.getItem("ID_VENDEDOR"),
+        nome: "",
+        sexo: "",
+        data_nascimento: ""
       },
       existe_info: true
     };
@@ -88,24 +55,14 @@ export default {
       //puxa todos os itens do estoque do PDV que tem como status == 1
       axios
         .get(
-          "http://localhost:5000/infoempresa/vendedor/get?id_vendedor=" +
-            window.localStorage.getItem("idvendedor")
+          "http://localhost:5000/infopessoal/get/?fgk_id_vendedor=" +
+            window.localStorage.getItem("ID_VENDEDOR")
         ) // get na API para mostrar todas os pdv
         .then(function(response) {
-          (self.vendedor_edit.id_vendedor =
-            response.data.response[0].id_vendedor),
-            (self.vendedor_edit.salario_mensal =
-              response.data.response[0].salario_mensal);
-          (self.vendedor_edit.agencia_pagamento =
-            response.data.response[0].agencia_pagamento),
-            (self.vendedor_edit.conta_pagamento =
-              response.data.response[0].conta_pagamento),
-            (self.vendedor_edit.Cargo = response.data.response[0].Cargo),
-            (self.vendedor_edit.data_inicio_empresa =
-              response.data.response[0].data_inicio_empresa),
-            (self.vendedor_edit.status = response.data.response[0].status),
-            (self.vendedor_edit.dia_pagamento =
-              response.data.response[0].dia_pagamento);
+          (self.vendedor_edit.nome = response.data.response[0].nome);
+          (self.vendedor_edit.sexo = response.data.response[0].sexo);
+          (self.vendedor_edit.data_nascimento = response.data.response[0].data_nascimento);
+          (self.vendedor_edit.fk_id_vendedor = response.data.response[0].fk_id_vendedor);
         })
         .catch(function(error) {
           self.existe_info = false;
@@ -122,15 +79,11 @@ export default {
     CadastrarInfo() {
       var self = this;
       axios
-        .post("http://localhost:5000/infoempresa/salvar/vendedor/post/", {
-          id_vendedor: self.vendedor_edit.id_vendedor,
-          salario_mensal: self.vendedor_edit.salario_mensal,
-          agencia_pagamento: self.vendedor_edit.agencia_pagamento,
-          conta_pagamento: self.vendedor_edit.conta_pagamento,
-          Cargo: self.vendedor_edit.Cargo,
-          data_inicio_empresa: self.vendedor_edit.data_inicio_empresa,
-          status: self.vendedor_edit.status,
-          dia_pagamento: self.vendedor_edit.dia_pagamento
+        .post("http://localhost:5000/infopessoal/cadastrar/vendedor/post/", {
+          nome: self.vendedor_edit.nome,
+          sexo: self.vendedor_edit.sexo,
+          data_nascimento: self.vendedor_edit.data_nascimento,
+          fk_id_vendedor: self.vendedor_edit.fk_id_vendedor
         })
         .then(function(response) {
           location.reload();
@@ -143,15 +96,11 @@ export default {
     SalvarInfo() {
       var self = this;
       axios
-        .post("http://localhost:5000/infoempresa/vendedor/post", {
-          id_vendedor: self.vendedor_edit.id_vendedor,
-          salario_mensal: self.vendedor_edit.salario_mensal,
-          agencia_pagamento: self.vendedor_edit.agencia_pagamento,
-          conta_pagamento: self.vendedor_edit.conta_pagamento,
-          Cargo: self.vendedor_edit.Cargo,
-          data_inicio_empresa: self.vendedor_edit.data_inicio_empresa,
-          status: self.vendedor_edit.status,
-          dia_pagamento: self.vendedor_edit.dia_pagamento
+        .post("http://localhost:5000/infopessoal/salvar/vendedor/post", {
+          nome: self.vendedor_edit.nome,
+          sexo: self.vendedor_edit.sexo,
+          data_nascimento: self.vendedor_edit.data_nascimento,
+          fk_id_vendedor: self.vendedor_edit.fk_id_vendedor
         })
         .then(function(response) {
           location.reload();
