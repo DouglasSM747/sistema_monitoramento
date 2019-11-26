@@ -14,12 +14,6 @@
           label="Nome Comprador"
           placeholder="Joao ..."
         />
-        <base-input
-          class="col-md-4"
-          v-model="numero_nota"
-          label="Numero da Nota"
-          placeholder="Numero da Nota"
-        />
       </div>
       <div class="form-row">
         <base-input
@@ -142,11 +136,12 @@ export default {
       ) // get na API para mostrar todas os pdv
       .then(function(response) {
         for (var i = 0; i < response.data.response.length; i++) {
-          if (response.data.response[i].status == 1) {
+          if (response.data.response[i].status == 1 && 
+              response.data.response[i].quantidade_estoque >0) {
+            
             self.tableData.push({
               id_pdv: response.data.response[i].fk2_idPDV,
-              quantidade_disponivel:
-                response.data.response[i].quantidade_estoque,
+              quantidade_disponivel: response.data.response[i].quantidade_estoque,
               id: response.data.response[i].id_produto,
               produto: response.data.response[i].nome_produto,
               valor: response.data.response[i].valor,
@@ -202,6 +197,7 @@ export default {
     },
 
     VerificarProdutoTabelaDeProdutos(codigo_produto, produto) {
+      if(this.quantidade_adicionada > 0){
       var i = 0;
       var achou = false;
       //se achou verifica se existe ou n na tabela de produtos
@@ -217,6 +213,7 @@ export default {
       } else {
         //se n existe na tabela add
         this.addProduto(produto);
+      }
       }
     },
 
@@ -287,7 +284,7 @@ export default {
                     valor_pago: this.valor_pago
                   })
                   .then(function(response) {
-                    self.addProdutoCompra();
+                    self.addProdutoCompra(response.data.response.insertId);
                   })
                   .catch(function(error) {
                     console.log(error);
@@ -309,7 +306,7 @@ export default {
                 valor_pago: this.valor_pago
               })
               .then(function(response) {
-                self.addProdutoCompra();
+                self.addProdutoCompra(response.data.response.insertId);
               })
               .catch(function(error) {
                 console.log(error);
@@ -318,15 +315,15 @@ export default {
         }
       }
     },
-    addProdutoCompra() {
+    addProdutoCompra(idcompra) {
       var self = this;
       for (var i = 0; i < self.tabelaProdutos.length; i++) {
-        axios
-          .post("http://localhost:5000/realizar/compra/produto", {
+        axios.post("http://localhost:5000/realizar/compra/produto", {
             // Passa a informacoes do produto
-            numero_nota: self.numero_nota,
+            numero_nota: idcompra,
             id_produto: self.tabelaProdutos[i].id,
-            quantidade_comprada: self.tabelaProdutos[i].quantidade_comprada
+            quantidade_comprada: self.tabelaProdutos[i].quantidade_comprada,
+            idpdv: window.localStorage.getItem("ID_PDV")
           })
           .then(function(response) {
             location.reload();

@@ -39,7 +39,8 @@ export default {
     axios
       .get(
         "http://localhost:5000/produtos/get?idcompra= " +
-          window.localStorage.getItem("id_compra")
+          window.localStorage.getItem("id_compra")+'&idpdv='+
+          window.localStorage.getItem("ID_PDV")
       ) // get na API para mostrar todas os pdv
       .then(function(response) {
         for (var i = 0; i < response.data.response.length; i++) {

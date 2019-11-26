@@ -88,17 +88,17 @@
       <base-table :data="tableData" :columns="columns">
         <template slot="columns">
           <th class="text-center">Numero Produto</th>
-          <th>Produto</th>
-          <th>Quantidade</th>
-          <th>Valor</th>
-          <th class="text-right">Excluir</th>
+          <th class="text-center">Produto</th>
+          <th class="text-center">Quantidade</th>
+          <th class="text-center">Valor</th>
+          <th class="text-center">Excluir</th>
         </template>
         <template slot-scope="{row}">
           <td class="text-center">{{row.id}}</td>
-          <td>{{row.produto}}</td>
-          <td>{{row.quantidade}}</td>
-          <td>{{row.valor}}</td>
-          <td class="td-actions text-right">
+          <td class="text-center">{{row.produto}}</td>
+          <td class="text-center">{{row.quantidade}}</td>
+          <td class="text-center">{{row.valor}}</td>
+          <td class="td-actions text-center">
             <base-button type="info" size="sm" icon v-on:click="abrirModalExclusao(row.id)">
               <i class="tim-icons icon-simple-remove"></i>
             </base-button>

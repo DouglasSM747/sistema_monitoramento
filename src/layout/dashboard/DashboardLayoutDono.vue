@@ -2,7 +2,10 @@
   <div class="wrapper">
     <side-bar>
       <template slot="links">
-        <sidebar-link to="/pdvs" :name="$t('sidebar.listadonos')" icon="tim-icons icon-single-02"/>
+        <sidebar-link to="/profile" :name="$t('sidebar.userProfile')" icon="tim-icons icon-single-02"/>
+        <sidebar-link to="/estoque" :name="$t('sidebar.estoque')" icon="tim-icons icon-single-02"/>
+        <sidebar-link to="/compras" :name="$t('sidebar.compras')" icon="tim-icons icon-puzzle-10"/>
+        <sidebar-link to="/funcionarios" :name="$t('sidebar.funcionarios')" icon="tim-icons icon-puzzle-10"/>
       </template>
     </side-bar>
     <div class="main-panel">

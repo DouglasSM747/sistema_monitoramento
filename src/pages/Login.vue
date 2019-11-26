@@ -45,6 +45,7 @@ export default {
               existe_conta = true;
             }
           }
+          //retorna mensagem se não existe no sistema
           if (!existe_conta) {
             Swal.fire({
               title: "Conta n consta no Sistema",
@@ -57,17 +58,16 @@ export default {
         });
     },
     AcessarTipoConta(dadosUsuario) {
-
       if (dadosUsuario.tipo == "funcionario") {
         window.localStorage.setItem("ID_PDV",dadosUsuario.fk_id_PDV_pertencente);
         window.localStorage.setItem("ID_VENDEDOR",dadosUsuario.idVendedor);
          this.$router.push("/funcionario");
-      } else if (dadosUsuario.tipo == "adm") {
+      } else if (dadosUsuario.tipo == "dono") {
         window.localStorage.setItem("ID_PDV",dadosUsuario.idPDV);
         this.$router.push("/dono"); // vai para a pagina de dono do PDV
       } else if (dadosUsuario.tipo == "gerente") {
-        window.localStorage.setItem("ID_GERENTE",dadosUsuario.idPDV);
-        // this.$router.push("/dono"); // vai para a pagina de dono do PDV
+        window.localStorage.setItem("ID_GERENTE",dadosUsuario.idGerente_PDV);
+        this.$router.push("/gerente"); // vai para a pagina de dono do PDV
       }
     }
   }

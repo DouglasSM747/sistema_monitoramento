@@ -3,6 +3,10 @@ module.exports = function (application) {
     application.get('/compra/get/', function (request, response) {
         application.server.controllers.filial.getCompra(application, request, response);
     });
+
+    application.get('/donos/get/', function (request, response) {
+        application.server.controllers.filial.getDonosPDV(application, request, response);
+    });
     
 
     application.get('/vendedor/get/', function (request, response) {
@@ -25,8 +29,16 @@ module.exports = function (application) {
         application.server.controllers.filial.saveInfo(application, request, response);
     });
 
+    application.post('/deletar/dono/', function (request, response) {
+        application.server.controllers.filial.deletarDono(application, request, response);
+    });
+
     application.post('/cadastrar/vendedor/', function (request, response) {
         application.server.controllers.filial.cadastrarFuncionario(application, request, response);
+    });
+
+    application.post('/cadastrar/dono/', function (request, response) {
+        application.server.controllers.filial.cadastrarDono(application, request, response);
     });
 
     application.get('/produtos/get/', function (request, response) {

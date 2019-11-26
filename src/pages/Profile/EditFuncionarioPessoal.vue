@@ -7,7 +7,6 @@
           label="Nome Do Funcionario"
           placeholder="Nome Do Funcionario"
           v-model="vendedor_edit.nome"
-          disabled
         ></base-input>
       </div>
       <div class="col-md-5 px-md-1">
@@ -55,7 +54,7 @@ export default {
       //puxa todos os itens do estoque do PDV que tem como status == 1
       axios
         .get(
-          "http://localhost:5000/infopessoal/get/?fgk_id_vendedor=" +
+          "http://localhost:5000/infopessoal/get/?fk_id_vendedor=" +
             window.localStorage.getItem("ID_VENDEDOR")
         ) // get na API para mostrar todas os pdv
         .then(function(response) {

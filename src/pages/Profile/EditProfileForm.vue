@@ -21,9 +21,6 @@
       <div class="col-md-12">
         <base-input label="Nota Geral" v-model="nota" placeholder="Nota Geral"></base-input>
       </div>
-      <div class="col-md-12">
-        <base-input label="Rua" v-model="informacoes_PDVcol" placeholder="Rua Moradia"></base-input>
-      </div>
     </div>
     <div class="row">
       <div class="col-md-4 pr-md-1">
@@ -57,7 +54,6 @@ export default {
       preco_medio: 0,
       CESP: "",
       telefone_fixo: "",
-      informacoes_PDVcol: "rua",
       user: {}
     };
   },
@@ -75,8 +71,7 @@ export default {
           (self.data_fundacao = response.data.response[0].data_fundacao),
           (self.preco_medio = response.data.response[0].preco_medio),
           (self.CESP = response.data.response[0].CESP),
-          (self.telefone_fixo = response.data.response[0].telefone_fixo),
-          (self.informacoes_PDVcol = response.data.response[0].informacoes_PDVcol);
+          (self.telefone_fixo = response.data.response[0].telefone_fixo)
       })
       .catch(function(error) {
         console.log(error);
@@ -95,7 +90,6 @@ export default {
           preco_medio: this.preco_medio,
           CESP: this.CESP,
           telefone_fixo: this.telefone_fixo,
-          informacoes_PDVcol: this.informacoes_PDVcol
         })
         .then(function(response) {
           location.reload();

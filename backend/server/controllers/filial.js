@@ -1,3 +1,25 @@
+module.exports.getDonosPDV = function (application, request, response) {
+
+    if (request.method == 'GET') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+        
+        var fk_gerentePDV = request.query.idpdv;
+        
+        filialModel.getDonosPDV(fk_gerentePDV, function (error, result) {
+            if (!result) {
+                console.log(error);
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+
 module.exports.getCompra = function (application, request, response) {
 
     if (request.method == 'GET') {
@@ -124,8 +146,10 @@ module.exports.getProdutos = function (application, request, response) {
     if (request.method == 'GET') {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
-        var idcompra = request.query.idcompra;
-        filialModel.getProdutos(idcompra, function (error, result) {
+        
+        var idcompra = parseInt(request.query.idcompra);
+        var idpdv = parseInt(request.query.idpdv);
+        filialModel.getProdutos(idpdv,idcompra, function (error, result) {
             if (!result) {
                 response.send({ success: true, response: false });
                 filialModel._connection.end();
@@ -304,7 +328,6 @@ module.exports.saveInfo = function (application, request, response) {
             preco_medio: request.body.preco_medio,
             CESP: parseInt(request.body.CESP),
             telefone_fixo: request.body.telefone_fixo,
-            informacoes_PDVcol: request.body.informacoes_PDVcol,
             fk_id_PDV: request.body.atual_pdv
         };
 
@@ -421,7 +444,6 @@ module.exports.realizarCompra = function (application, request, response) {
         var filialModel = new application.server.models.filialDAO(connection);
 
         var params = {
-            numero_nota: parseInt(request.body.numero_nota),
             data_compra: request.body.data_compra,
             id_vendedor_responsavel: parseInt(request.body.id_vendedor_responsavel),
             fk_id_pdv_occorrente: parseInt(request.body.fk_id_pdv_occorrente),
@@ -429,7 +451,6 @@ module.exports.realizarCompra = function (application, request, response) {
             forma_pagamento: request.body.forma_pagamento,
             nome_comprador: request.body.nome_comprador,
             valor_pago: parseInt(request.body.valor_pago),
-
         };
 
 
@@ -452,14 +473,15 @@ module.exports.addProdutoCompra = function (application, request, response) {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
 
-
         var params = {
             id_compra: parseInt(request.body.numero_nota),
             id_produto: parseInt(request.body.id_produto),
             quantidade: parseInt(request.body.quantidade_comprada),
         };
+        
+        var fk2_idPDV = parseInt(request.body.idpdv);
 
-        filialModel.addProdutoCompra(params, function (error, result) {
+        filialModel.addProdutoCompra(params,fk2_idPDV, function (error, result) {
             if (!result) {
                 console.log(error);
                 response.send({ success: true, response: false });
@@ -480,7 +502,6 @@ module.exports.cadastrarFuncionario = function (application, request, response) 
 
 
         var params = {
-            idVendedor: parseInt(request.body.id),
             fk_id_PDV_pertencente: parseInt(request.body.fk_id_PDV_pertencente),
             tipo: 'funcionario',
             email: request.body.email,
@@ -503,18 +524,71 @@ module.exports.cadastrarFuncionario = function (application, request, response) 
     }
 }
 
-module.exports.CadastraInfoVendedorPessoal = function (application, request, response) {
+module.exports.cadastrarDono = function (application, request, response) {
     if (request.method == 'POST') {
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
 
 
         var params = {
-            fk_id_vendedor: parseInt(request.body.fk_id_vendedor),
+            idPDV: parseInt(request.body.idPDV),
+            fk_gerentePDV: parseInt(request.body.fk_gerentePDV),
+            email: request.body.email,
+            senha: parseInt(request.body.senha),
+            tipo: 'dono'
+        };
+
+        filialModel.cadastrarDono(params, function (error, result) {
+            if (!result) {
+                console.log(error);
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+
+module.exports.deletarDono = function (application, request, response) {
+    if (request.method == 'POST') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+
+
+        var params = {
+            idPDV: parseInt(request.body.idPDV),
+            fk_gerentePDV: parseInt(request.body.fk_gerentePDV),
+        };
+
+        filialModel.deletarDono(params, function (error, result) {
+            if (!result) {
+                console.log(error);
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+
+module.exports.CadastraInfoVendedorPessoal = function (application, request, response) {
+    if (request.method == 'POST') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+
+        var params = {
             nome: request.body.nome,
             sexo: request.body.sexo,
-            data_nascimento: request.body.data_nascimento
+            data_nascimento: request.body.data_nascimento,
+            fk_id_vendedor: parseInt(request.body.fk_id_vendedor)
         };
+
 
         filialModel.CadastraInfoVendedorPessoal(params, function (error, result) {
             if (!result) {
@@ -536,15 +610,14 @@ module.exports.salvarInfoPessoalVendedor = function (application, request, respo
         var connection = application.config.dbConnection();
         var filialModel = new application.server.models.filialDAO(connection);
 
-
         var params = {
-            fk_id_vendedor: parseInt(request.body.fk_id_vendedor),
             nome: request.body.nome,
             sexo: request.body.sexo,
-            data_nascimento: request.body.data_nascimento
+            data_nascimento: request.body.data_nascimento,
         };
-        
-        filialModel.salvarInfoPessoalVendedor(params, function (error, result) {
+        var fk_id_vendedor  = parseInt(request.body.fk_id_vendedor);
+
+        filialModel.salvarInfoPessoalVendedor(params,fk_id_vendedor, function (error, result) {
             if (!result) {
                 console.log(error);
                 response.send({ success: true, response: false });
