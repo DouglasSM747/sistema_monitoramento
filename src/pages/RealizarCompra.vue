@@ -326,6 +326,27 @@ export default {
             idpdv: window.localStorage.getItem("ID_PDV")
           })
           .then(function(response) {
+            console.log(response.data);
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      }
+      self.salvarHistoricoCompra(idcompra);
+    },
+    salvarHistoricoCompra(idcompra) {
+      var self = this;
+      for (var i = 0; i < self.tabelaProdutos.length; i++) {
+        axios.post("http://localhost:5000/salvarhistorico/post/", {
+            // Passa a informacoes do produto
+            id_compra: idcompra,
+            id_pdv: window.localStorage.getItem("ID_PDV"),
+            id_produto: self.tabelaProdutos[i].id,
+            nome_produto: self.tabelaProdutos[i].produto,
+            quantidade_comprada: self.tabelaProdutos[i].quantidade_comprada,
+            valor: self.tabelaProdutos[i].valor,
+          })
+          .then(function(response) {
             location.reload();
           })
           .catch(function(error) {

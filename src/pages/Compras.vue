@@ -15,7 +15,7 @@
       <td class="text-center">{{row.data_compra}}</td>
       <td class="td-actions text-right">
         <base-button type="info" size="sm" icon v-on:click="IrParaPontodeVenda(row.numero_nota)">
-          <i class="tim-icons icon-settings"></i>
+          <i class="tim-icons icon-zoom-split"></i>
         </base-button>
       </td>
     </template>

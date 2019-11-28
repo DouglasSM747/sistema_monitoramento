@@ -19,11 +19,16 @@
     </div>
     <div class="row">
       <div class="col-md-5 pr-md-1">
-        <base-input
-          label="Sexo"
-          v-model="vendedor_edit.sexo"
-          placeholder="Quantidade de Vendas"
-        ></base-input>
+        <base-input class="col-md-4" label="Sexo">
+          <select
+            v-on:click="SelecionarFormaPagamento(selected)"
+            v-model="selected"
+            id="inputState"
+            class="form-control"
+          >
+            <option v-bind:key="item.op" v-for="item in forma_de_pagamento">{{item.op}}</option>
+          </select>
+        </base-input>
       </div>
     </div>
     <div class="row">
@@ -37,6 +42,12 @@ import axios from "axios";
 export default {
   data() {
     return {
+      selected: "",
+      forma_de_pagamento: [
+        { op: "Masculino" },
+        { op: "Feminino" },
+        { op: "Outro" }
+      ],
       vendedor_edit: {
         fk_id_vendedor: window.localStorage.getItem("ID_VENDEDOR"),
         nome: "",
@@ -58,10 +69,12 @@ export default {
             window.localStorage.getItem("ID_VENDEDOR")
         ) // get na API para mostrar todas os pdv
         .then(function(response) {
-          (self.vendedor_edit.nome = response.data.response[0].nome);
-          (self.vendedor_edit.sexo = response.data.response[0].sexo);
-          (self.vendedor_edit.data_nascimento = response.data.response[0].data_nascimento);
-          (self.vendedor_edit.fk_id_vendedor = response.data.response[0].fk_id_vendedor);
+          self.vendedor_edit.nome = response.data.response[0].nome;
+          self.vendedor_edit.sexo = response.data.response[0].sexo;
+          self.vendedor_edit.data_nascimento =
+            response.data.response[0].data_nascimento;
+          self.vendedor_edit.fk_id_vendedor =
+            response.data.response[0].fk_id_vendedor;
         })
         .catch(function(error) {
           self.existe_info = false;

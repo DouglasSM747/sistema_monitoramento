@@ -68,7 +68,7 @@
           <td class="text-center">{{row.email}}</td>
           <td class="td-actions text-center">
             <base-button type="info" size="sm" icon v-on:click="editarVendedor(row.idVendedor)">
-              <i  class=" text-center tim-icons icon-simple-remove"></i>
+              <i  class=" text-center tim-icons icon-pencil"></i>
             </base-button>
           </td>
         </template>

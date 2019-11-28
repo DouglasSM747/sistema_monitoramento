@@ -48,7 +48,7 @@ FilialDAO.prototype.getInfo = function(idpdv,callback) {
 FilialDAO.prototype.saveInfo = function(params,callback) {
 	this._connection.query('UPDATE informacoes_pdv SET ? WHERE fk_id_PDV = '+params.fk_id_PDV,params, callback);
 };
-//Salva informacao empresarial Vendedor
+//atualizar informacao empresarial Vendedor
 FilialDAO.prototype.salvarInfoEmpresaVendedor = function(params,callback) {
 	this._connection.query('UPDATE teste.informacoes_empresariais_vendedor SET id_vendedor = '+params.id_vendedor+',salario_mensal =  "'+
 	params.salario_mensal+'",agencia_pagamento = "'+params.agencia_pagamento+'",conta_pagamento = "'+params.conta_pagamento+'", Cargo = "'+params.Cargo+'", status = '+params.status+', dia_pagamento = "'+params.dia_pagamento+'", data_inicio_empresa = "'+params.data_inicio_empresa+'" WHERE id_vendedor = '+params.id_vendedor, callback);
@@ -60,11 +60,6 @@ FilialDAO.prototype.CadastraInfoVendedorEmpresa = function(params,callback) {
 	params.salario_mensal+'",agencia_pagamento =  "'+params.agencia_pagamento+'",conta_pagamento = "'+params.conta_pagamento+'", Cargo = "'+params.Cargo+'", status = '+params.status+', dia_pagamento = "'+params.dia_pagamento+'", data_inicio_empresa = "'+params.data_inicio_empresa+'"', callback);
 };
 
-//Atualizar info do vendedor EMPRESA
-FilialDAO.prototype.deleteProdutoL = function(params,callback) {
-	this._connection.query('UPDATE teste.informacoes_empresariais_vendedor SET ? where id_vendedor = '+idpdv,params, callback);
-};
-
 //Deleta produto logicamente
 FilialDAO.prototype.deleteProdutoL = function(idpdv,id_produto,callback) {
 	this._connection.query('UPDATE estoque SET status = 0 WHERE id_produto = '+id_produto+' AND fk2_idPDV ='+idpdv, callback);
@@ -72,17 +67,20 @@ FilialDAO.prototype.deleteProdutoL = function(idpdv,id_produto,callback) {
 
 //Apagar produto de forma permanente
 FilialDAO.prototype.deleteProdutoF = function(idpdv,id_produto,callback) {
-	this._connection.query('UPDATE estoque SET status = -1 WHERE id_produto = '+id_produto+' AND fk2_idPDV ='+idpdv, callback);
+	this._connection.query('delete from estoque WHERE id_produto = '+id_produto+' AND fk2_idPDV ='+idpdv, callback);
 };
 //Adicionar produto ao Estoque
 FilialDAO.prototype.addProduto = function(params,callback) {
 	this._connection.query('INSERT INTO estoque SET ?',params, callback);
 };
+//Adicionar historico de compra
+FilialDAO.prototype.SalvarHistorico = function(params,callback) {
+	this._connection.query('INSERT INTO historico_compra SET ?',params, callback);
+};
 //Update produto ao Estoque
 FilialDAO.prototype.updateProduto = function(params,callback) {
 	this._connection.query('UPDATE estoque SET quantidade_estoque = ' + params.quantidade_estoque +''+
-	', nome_produto = "' + params.nome_produto +'"'
-	+ ' , valor = ' + params.valor +'' + ' , status = ' + params.status+' WHERE fk2_idPDV = ' + params.fk2_idPDV +' AND id_produto = '+params.id_produto, callback);
+	', valor = ' + params.valor +'' + ' , status = ' + params.status+' WHERE fk2_idPDV = ' + params.fk2_idPDV +' AND id_produto = '+params.id_produto, callback);
 };
 //Buscar produtos do Estoque
 FilialDAO.prototype.getEstoque = function(idpdv1,callback) {
@@ -90,7 +88,7 @@ FilialDAO.prototype.getEstoque = function(idpdv1,callback) {
 };
 //Buscar produto - SEM NECESSIDADE
 FilialDAO.prototype.getProdutos = function(idpdv,idcompra,callback) {
-	this._connection.query('SELECT * FROM teste.produto_comprado, teste.estoque WHERE id_compra = '+idcompra+' AND produto_comprado.id_produto = estoque.id_produto AND fk2_idPDV = '+idpdv, callback);
+	this._connection.query('SELECT * FROM teste.historico_compra WHERE id_compra = '+idcompra+' AND id_pdv = '+idpdv, callback);
 };
 
 //salvar informação pessoal funcionaro

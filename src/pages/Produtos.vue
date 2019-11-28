@@ -1,8 +1,6 @@
 <template>
 <card>
   <div>
-    <card>Valor total desta compra: {{valor_total}}</card>
-
     <base-table :data="tableData" :columns="columns">
       <template slot="columns">
         <th class="text-center">Numero Produto</th>
@@ -18,7 +16,11 @@
       </template>
     </base-table>
   </div>
+<div class="text-right col-lg-12 ml-auto mr-auto">
+  <h4>Valor total da compra: {{valor_total}}</h4>
+</div>
 </card>
+
 </template>
 <script>
 import axios from "axios";
@@ -45,11 +47,11 @@ export default {
       .then(function(response) {
         for (var i = 0; i < response.data.response.length; i++) {
           // monta a lista de pdv
-          (self.valor_total += response.data.response[i].valor * response.data.response[i].quantidade),
+          (self.valor_total += response.data.response[i].valor * response.data.response[i].quantidade_comprada),
             self.tableData.push({
               id: response.data.response[i].id_produto,
               num_produto: response.data.response[i].nome_produto,
-              quantidade: response.data.response[i].quantidade,
+              quantidade: response.data.response[i].quantidade_comprada,
               valor: response.data.response[i].valor
             });
         }

@@ -355,7 +355,6 @@ module.exports.updateProduto = function (application, request, response) {
             fk2_idPDV: parseInt(request.body.idpdv),
             quantidade_estoque: parseInt(request.body.quantidade),
             id_produto: parseInt(request.body.idproduto),
-            nome_produto: request.body.nome,
             valor: parseInt(request.body.valor),
             status: parseInt(request.body.status),
         };
@@ -425,6 +424,35 @@ module.exports.CadastraInfoVendedorEmpresa = function (application, request, res
 
 
         filialModel.CadastraInfoVendedorEmpresa(params, function (error, result) {
+            if (!result) {
+                console.log(error);
+                response.send({ success: true, response: false });
+                filialModel._connection.end();
+            }
+            else {
+                response.send({ success: true, response: result });
+                filialModel._connection.end();
+            }
+        });
+    }
+}
+
+module.exports.SalvarHistorico = function (application, request, response) {
+    if (request.method == 'POST') {
+        var connection = application.config.dbConnection();
+        var filialModel = new application.server.models.filialDAO(connection);
+
+        var params = {
+            id_compra: parseInt(request.body.id_compra),
+            id_pdv: parseInt(request.body.id_pdv),
+            id_produto: parseInt(request.body.id_produto),
+            nome_produto: request.body.nome_produto,
+            quantidade_comprada: request.body.quantidade_comprada,
+            valor: parseInt(request.body.valor),
+        };
+
+
+        filialModel.SalvarHistorico(params, function (error, result) {
             if (!result) {
                 console.log(error);
                 response.send({ success: true, response: false });

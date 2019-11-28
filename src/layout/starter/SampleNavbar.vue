@@ -20,8 +20,6 @@
               aria-controls="navigation-index"
               aria-label="Toggle navigation">
         <span class="navbar-toggler-bar navbar-kebab"></span>
-        <span class="navbar-toggler-bar navbar-kebab"></span>
-        <span class="navbar-toggler-bar navbar-kebab"></span>
       </button>
 
       <collapse-transition>
@@ -30,18 +28,9 @@
             <div class="search-bar input-group" @click="searchModalVisible = true">
               <!-- <input type="text" class="form-control" placeholder="Search...">
               <div class="input-group-addon"><i class="tim-icons icon-zoom-split"></i></div> -->
-              <button class="btn btn-link" id="search-button" data-toggle="modal" data-target="#searchModal">
-                <i class="tim-icons icon-zoom-split"></i>
-              </button>
+
               <!-- You can choose types of search input -->
             </div>
-            <modal :show.sync="searchModalVisible"
-                   class="modal-search"
-                   id="searchModal"
-                   :centered="false"
-                   :show-close="true">
-              <input slot="header" v-model="searchQuery" type="text" class="form-control" id="inlineFormInputGroup" placeholder="SEARCH">
-            </modal>
             <base-dropdown tag="li"
                            :menu-on-right="!$rtl.isRTL"
                            title-tag="a"
@@ -56,12 +45,6 @@
                   Log out
                 </p>
               </a>
-              <li class="nav-link">
-                <a href="#" class="nav-item dropdown-item">Profile</a>
-              </li>
-              <li class="nav-link">
-                <a href="#" class="nav-item dropdown-item">Settings</a>
-              </li>
               <div class="dropdown-divider"></div>
               <li class="nav-link">
                 <a href="#" class="nav-item dropdown-item">Log out</a>

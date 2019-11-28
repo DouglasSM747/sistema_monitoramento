@@ -26,6 +26,12 @@
         <card type="secondary" body-classes="px-lg-5 py-lg-5" class="border-0 mb-0">
           <template>
             <div class="text-muted text-center mb-3">Adicionar Produto Em Estoque</div>
+          <blockquote class="blockquote">
+  <p class="mb-0 small" style="color: white">Caso deseje apenas atualizar 
+    o produto, somente é necessario preencher os campos (codigo do produto, valor e quantidade)
+    caso contrario todos devem ser preenchidos.
+  </p>
+</blockquote>
             <form role="form">
               <base-input
                 alternative
@@ -189,7 +195,6 @@ export default {
           idproduto: this.produtoEdit.id,
           quantidade: this.produtoEdit.quantidade,
           valor: this.produtoEdit.valor,
-          nome: this.produtoEdit.nome,
           status: 1,
           idpdv: window.localStorage.getItem("ID_PDV")
         })

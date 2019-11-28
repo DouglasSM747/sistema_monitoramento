@@ -43,7 +43,7 @@
     <div class="row">
       <div class="col-md-5">
         <base-input
-          label="Data de Pagamento"
+          label="Dia de Pagamento"
           v-model="vendedor_edit.dia_pagamento"
           placeholder="Data Pagamento"
         ></base-input>
@@ -75,7 +75,7 @@ export default {
         Cargo: "",
         status: 0,
         dia_pagamento: "",
-        data_inicio_empresa: ""
+        data_inicio_empresa: 0,
       },
       existe_info: true
     };
