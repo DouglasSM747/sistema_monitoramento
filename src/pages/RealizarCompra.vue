@@ -171,16 +171,10 @@ export default {
     excluirProduto(item, valor) {
       var i = 0;
       var index = this.tabelaProdutos.findIndex(produto => produto.id == item)
-      this.tabelaProdutos[index].id = 1;
-      // for (i = 0; i < this.tabelaProdutos.length; i++) {
-      //   if (this.tabelaProdutos[i].id == item) {
-      //     this.quantidade_total_compra -=
-      //       valor * parseInt(this.tabelaProdutos[i].quantidade_comprada);
-      //     this.tabelaProdutos.pop(i);
-      //     this.getEstoque();
-      //     break;
-      //   }
-      // }
+      this.quantidade_total_compra -= valor * parseInt(this.tabelaProdutos[i].quantidade_comprada);
+      this.tabelaProdutos.splice(index,1);
+      this.getEstoque();
+      this.$forceUpdate();
     },
 
     SelecionarFormaPagamento(opcao) {
