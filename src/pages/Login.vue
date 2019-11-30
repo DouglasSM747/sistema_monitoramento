@@ -11,10 +11,11 @@
             <validation-provider rules="required" v-slot="{ errors }">
               <base-input
                 v-model="email"
+                type="email"
                 name="email"
                 placeholder="Email"
-                addon-left-icon="tim-icons icon-email-85"
-              ></base-input>
+                addon-left-icon="tim-icons icon-email-85">
+              </base-input>
               <span>{{ errors[0] }}</span>
             </validation-provider>
             <validation-provider rules="required" v-slot="{ errors }">
@@ -83,7 +84,7 @@ export default {
           //retorna mensagem se não existe no sistema
           if (!existe_conta) {
             Swal.fire({
-              title: "Conta n consta no Sistema",
+              title: "Conta Não Consta No Sistema",
               confirmButtonText: "Ok"
             });
           }

@@ -21,12 +21,11 @@
       <div class="col-md-5 pr-md-1">
         <base-input class="col-md-4" label="Sexo">
           <select
-            v-on:click="SelecionarFormaPagamento(selected)"
-            v-model="selected"
+            v-model="vendedor_edit.sexo"
             id="inputState"
             class="form-control"
           >
-            <option v-bind:key="item.op" v-for="item in forma_de_pagamento">{{item.op}}</option>
+            <option v-bind:key="item.op" v-for="item in sexos">{{item.op}}</option>
           </select>
         </base-input>
       </div>
@@ -42,8 +41,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      selected: "",
-      forma_de_pagamento: [
+      sexos: [
         { op: "Masculino" },
         { op: "Feminino" },
         { op: "Outro" }
@@ -91,7 +89,7 @@ export default {
     CadastrarInfo() {
       var self = this;
       axios
-        .post("http://localhost:5000/infopessoal/cadastrar/vendedor/post/", {
+        .post(" http://localhost:5000/infopessoal/cadastrar/vendedor/post/", {
           nome: self.vendedor_edit.nome,
           sexo: self.vendedor_edit.sexo,
           data_nascimento: self.vendedor_edit.data_nascimento,

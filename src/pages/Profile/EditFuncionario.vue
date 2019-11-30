@@ -143,7 +143,7 @@ export default {
     SalvarInfo() {
       var self = this;
       axios
-        .post("http://localhost:5000/infoempresa/vendedor/post", {
+        .post("hhttp://localhost:5000/infoempresa/vendedor/post", {
           id_vendedor: self.vendedor_edit.id_vendedor,
           salario_mensal: self.vendedor_edit.salario_mensal,
           agencia_pagamento: self.vendedor_edit.agencia_pagamento,

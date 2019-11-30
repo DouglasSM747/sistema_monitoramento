@@ -53,14 +53,15 @@
           v-on:keyup.enter="verificarProdutoNaTabela(produto_adicionado)"
         />
       </div>
-      <div>
-        <base-table :data="tabelaProdutos" :columns="columns">
+      <div class="table-responsive">
+        <base-table :key="componentKey" :data="tabelaProdutos" :columns="columns">
           <template slot="columns">
             <th class="text-center">Numero Produto</th>
             <th class="text-center">Nome Produto</th>
             <th class="text-center">Valor</th>
             <th class="text-center">Quantidade Comprada</th>
             <th class="text-center">Quantidade Disponivel</th>
+
             <th class="text-center">Actions</th>
           </template>
           <template slot-scope="{row}">
@@ -88,7 +89,7 @@
       </div>
     </form>
   </card>
-</template>
+</template>2
 <script>
 import { BaseTable } from "@/components";
 import axios from "axios";
@@ -100,6 +101,7 @@ export default {
   },
   data() {
     return {
+      componentKey: 0,
       quantidade_total_compra: 0,
       produto_adicionado: "",
       quantidade_adicionada: "",
@@ -128,31 +130,7 @@ export default {
     };
   },
   mounted() {
-    var self = this;
-    //puxa todos os itens do estoque do PDV que tem como status == 1
-    axios
-      .get(
-        "http://localhost:5000/estoque/get?idpdv=" + self.fk_id_pdv_occorrente
-      ) // get na API para mostrar todas os pdv
-      .then(function(response) {
-        for (var i = 0; i < response.data.response.length; i++) {
-          if (response.data.response[i].status == 1 && 
-              response.data.response[i].quantidade_estoque >0) {
-            
-            self.tableData.push({
-              id_pdv: response.data.response[i].fk2_idPDV,
-              quantidade_disponivel: response.data.response[i].quantidade_estoque,
-              id: response.data.response[i].id_produto,
-              produto: response.data.response[i].nome_produto,
-              valor: response.data.response[i].valor,
-              quantidade_comprada: 0
-            });
-          }
-        }
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+    this.getEstoque();
   },
   computed: {
     getTempo: function() {
@@ -160,17 +138,49 @@ export default {
     }
   },
   methods: {
+    getEstoque() {
+      this.tableData.length = 0;
+      var self = this;
+      //puxa todos os itens do estoque do PDV que tem como status == 1
+      axios
+        .get(
+          "http://localhost:5000/estoque/get?idpdv=" + self.fk_id_pdv_occorrente
+        ) // get na API para mostrar todas os pdv
+        .then(function(response) {
+          for (var i = 0; i < response.data.response.length; i++) {
+            if (
+              response.data.response[i].status == 1 &&
+              response.data.response[i].quantidade_estoque > 0
+            ) {
+              self.tableData.push({
+                id_pdv: response.data.response[i].fk2_idPDV,
+                quantidade_disponivel:
+                  response.data.response[i].quantidade_estoque,
+                id: response.data.response[i].id_produto,
+                produto: response.data.response[i].nome_produto,
+                valor: response.data.response[i].valor,
+                quantidade_comprada: 0
+              });
+            }
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
     excluirProduto(item, valor) {
       var i = 0;
-      for (i = 0; i < this.tabelaProdutos.length; i++) {
-        if (this.tabelaProdutos[i].id == item) {
-          this.quantidade_total_compra -=
-            valor * parseInt(this.tabelaProdutos[i].quantidade_comprada);
-
-          this.tabelaProdutos.pop(i);
-          break;
-        }
-      }
+      var index = this.tabelaProdutos.findIndex(produto => produto.id == item)
+      this.tabelaProdutos[index].id = 1;
+      // for (i = 0; i < this.tabelaProdutos.length; i++) {
+      //   if (this.tabelaProdutos[i].id == item) {
+      //     this.quantidade_total_compra -=
+      //       valor * parseInt(this.tabelaProdutos[i].quantidade_comprada);
+      //     this.tabelaProdutos.pop(i);
+      //     this.getEstoque();
+      //     break;
+      //   }
+      // }
     },
 
     SelecionarFormaPagamento(opcao) {
@@ -182,7 +192,7 @@ export default {
     },
     verificarProdutoNaTabela(codigo_produto) {
       var self = this;
-      var achou2 = false;
+      var achou2 = false; //achou o produto
       var i = 0;
       var info_produto;
 
@@ -190,30 +200,42 @@ export default {
       for (i = 0; i < self.tableData.length; i++) {
         if (self.tableData[i].id == codigo_produto) {
           info_produto = self.tableData[i];
-          this.VerificarProdutoTabelaDeProdutos(codigo_produto, info_produto);
+          achou2 = true;
           break;
         }
+      }
+      //se achou o produto
+      if (achou2) {
+        this.VerificarProdutoTabelaDeProdutos(codigo_produto, info_produto);
+      }
+      //se nao achou o produto, da feedback
+      else {
+        Swal.fire({
+          title: "Este codigo não existe no sistema",
+          confirmButtonText: "Ok"
+        });
       }
     },
 
     VerificarProdutoTabelaDeProdutos(codigo_produto, produto) {
-      if(this.quantidade_adicionada > 0){
-      var i = 0;
-      var achou = false;
-      //se achou verifica se existe ou n na tabela de produtos
-      for (i = 0; i < this.tabelaProdutos.length; i++) {
-        if (codigo_produto == this.tabelaProdutos[i].id) {
-          achou = true;
-          break;
+      //se tem a quantidade sugerida pelo cliente
+      if (this.quantidade_adicionada > 0) {
+        var i = 0;
+        var achou = false;
+        //se achou verifica se existe ou n na tabela de produtos
+        for (i = 0; i < this.tabelaProdutos.length; i++) {
+          if (codigo_produto == this.tabelaProdutos[i].id) {
+            achou = true;
+            break;
+          }
         }
-      }
-      //se existe na tabela atualiza
-      if (achou) {
-        this.attProduto(i);
-      } else {
-        //se n existe na tabela add
-        this.addProduto(produto);
-      }
+        //se existe na tabela atualiza
+        if (achou) {
+          this.attProduto(i);
+        } else {
+          //se n existe na tabela add
+          this.addProduto(produto);
+        }
       }
     },
 
@@ -232,16 +254,29 @@ export default {
         this.quantidade_total_compra += parseInt(
           this.tabelaProdutos[indice].valor * this.quantidade_adicionada
         );
+      } else {
+        Swal.fire({
+          title: "Quantidade indisponivel em estoque",
+          confirmButtonText: "Ok"
+        });
       }
     },
 
     addProduto(produto) {
       //se n tem a quantidade no sistema
-      if(produto.quantidade_disponivel >= this.quantidade_adicionada){
+      if (produto.quantidade_disponivel >= this.quantidade_adicionada) {
         produto.quantidade_disponivel -= parseInt(this.quantidade_adicionada);
         produto.quantidade_comprada = parseInt(this.quantidade_adicionada);
         this.tabelaProdutos.push(produto);
-        this.quantidade_total_compra += parseInt(produto.valor * this.quantidade_adicionada);
+        this.quantidade_total_compra += parseInt(
+          produto.valor * this.quantidade_adicionada
+        );
+      } else {
+        Swal.fire({
+          title: "Quantidade indisponivel em estoque",
+          text: "Quantidade disponivel: " + produto.quantidade_disponivel,
+          confirmButtonText: "Ok"
+        });
       }
     },
     realizarCompra() {
@@ -256,7 +291,7 @@ export default {
           });
         } else {
           var self = this;
-          if(this.selected != 'Dinheiro'){
+          if (this.selected != "Dinheiro") {
             this.valor_pago = this.quantidade_total_compra;
           }
           if (
@@ -313,12 +348,18 @@ export default {
               });
           }
         }
+      } else {
+        Swal.fire({
+          title: "É necessario a adição de produtos a compra",
+          confirmButtonText: "Ok"
+        });
       }
     },
     addProdutoCompra(idcompra) {
       var self = this;
       for (var i = 0; i < self.tabelaProdutos.length; i++) {
-        axios.post("http://localhost:5000/realizar/compra/produto", {
+        axios
+          .post("http://localhost:5000/realizar/compra/produto", {
             // Passa a informacoes do produto
             numero_nota: idcompra,
             id_produto: self.tabelaProdutos[i].id,
@@ -337,17 +378,26 @@ export default {
     salvarHistoricoCompra(idcompra) {
       var self = this;
       for (var i = 0; i < self.tabelaProdutos.length; i++) {
-        axios.post("http://localhost:5000/salvarhistorico/post/", {
+        axios
+          .post("http://localhost:5000/salvarhistorico/post/", {
             // Passa a informacoes do produto
             id_compra: idcompra,
             id_pdv: window.localStorage.getItem("ID_PDV"),
             id_produto: self.tabelaProdutos[i].id,
             nome_produto: self.tabelaProdutos[i].produto,
             quantidade_comprada: self.tabelaProdutos[i].quantidade_comprada,
-            valor: self.tabelaProdutos[i].valor,
+            valor: self.tabelaProdutos[i].valor
           })
           .then(function(response) {
-            location.reload();
+            Swal.fire({
+              title: "Compra realizada",
+              text: "Compra executada com sucesso, numero da nota: " + idcompra,
+              confirmButtonText: "Ok"
+            }).then(result => {
+              if (result.value) {
+                location.reload();
+              }
+            });
           })
           .catch(function(error) {
             console.log(error);

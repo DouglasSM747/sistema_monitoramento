@@ -219,12 +219,11 @@ export default {
           idpdv: window.localStorage.getItem("ID_PDV")
         })
         .then(function(response) {
-          console.log(response.data);
+          location.reload();
         })
         .catch(function(error) {
           console.log(error);
         });
-      location.reload();
     },
 
     //funcao resposanvel por excluir produto de forma logica ou fisica
