@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `teste` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `teste`;
--- MySQL dump 10.13  Distrib 5.7.27, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.28, for Linux (x86_64)
 --
 -- Host: localhost    Database: teste
 -- ------------------------------------------------------
--- Server version	5.7.27-0ubuntu0.18.04.1
+-- Server version	5.7.28-0ubuntu0.18.04.4
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -36,9 +36,9 @@ CREATE TABLE `compra` (
   PRIMARY KEY (`numero_nota`),
   KEY `fk_id_pdv_occorrente_idx` (`fk_id_pdv_occorrente`),
   KEY `fk_id_vendedor_feito_idx` (`id_vendedor_responsavel`),
-  CONSTRAINT `fk_id_pdv_occorrente` FOREIGN KEY (`fk_id_pdv_occorrente`) REFERENCES `pdv` (`idPDV`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `fk_id_vendedor_feito` FOREIGN KEY (`id_vendedor_responsavel`) REFERENCES `vendedor` (`idVendedor`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_id_pdv_occorrente` FOREIGN KEY (`fk_id_pdv_occorrente`) REFERENCES `pdv` (`idPDV`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_id_vendedor_feito` FOREIGN KEY (`id_vendedor_responsavel`) REFERENCES `vendedor` (`idVendedor`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,7 +47,7 @@ CREATE TABLE `compra` (
 
 LOCK TABLES `compra` WRITE;
 /*!40000 ALTER TABLE `compra` DISABLE KEYS */;
-INSERT INTO `compra` VALUES (49,'27/11/2019 09:26:16',3,3,7,'Cartao Debito','João Silva',7),(50,'27/11/2019 09:32:34',3,3,10,'Cartao Debito','Fabrizio Honda',10),(51,'27/11/2019 09:53:33',3,3,12,'Dinheiro','Cleiton',120),(52,'28/11/2019 07:55:05',3,3,24,'Cartao Credito','Sistema Teste 1',24),(53,'28/11/2019 09:30:11',3,3,7,'Cartao Debito','Jean Do Santos',7),(54,'28/11/2019 09:31:48',3,3,3,'Cartao Debito','Clarice',3),(55,'29/11/2019 14:29:41',7,3,3,'Dinheiro','',10),(56,'29/11/2019 14:30:14',7,3,10,'Cartao Debito','Joao queroga',10),(57,'29/11/2019 14:41:39',8,3,2,'Cartao Credito','Zé pequeno',2),(58,'30/11/2019 14:34:45',8,3,1,'Cartao Debito','Carlos Alberto',1),(59,'30/11/2019 14:45:30',8,3,1,'Cartao Credito','Carlitoz',1);
+INSERT INTO `compra` VALUES (3,'12/1/2019, 9:32:05 PM',3,1,8,'Cartao Debito','Carlinhos',8);
 /*!40000 ALTER TABLE `compra` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -67,7 +67,7 @@ CREATE TABLE `estoque` (
   `status` int(11) NOT NULL,
   PRIMARY KEY (`fk2_idPDV`,`id_produto`),
   KEY `fk_id_produto_idx` (`id_produto`),
-  CONSTRAINT `fk2_idPDV` FOREIGN KEY (`fk2_idPDV`) REFERENCES `pdv` (`idPDV`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk2_idPDV` FOREIGN KEY (`fk2_idPDV`) REFERENCES `pdv` (`idPDV`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -77,7 +77,7 @@ CREATE TABLE `estoque` (
 
 LOCK TABLES `estoque` WRITE;
 /*!40000 ALTER TABLE `estoque` DISABLE KEYS */;
-INSERT INTO `estoque` VALUES (3,3,34,'Quey',1,1),(3,20,35,'Melão',5,1),(3,20,36,'Teste',2,1),(3,20,37,'Teste2',3,1),(3,20,38,'Teste4',2,1);
+INSERT INTO `estoque` VALUES (1,18,34,'Arroz',2,1),(1,18,35,'Feijao',2,1);
 /*!40000 ALTER TABLE `estoque` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -133,7 +133,7 @@ CREATE TABLE `historico_compra` (
 
 LOCK TABLES `historico_compra` WRITE;
 /*!40000 ALTER TABLE `historico_compra` DISABLE KEYS */;
-INSERT INTO `historico_compra` VALUES (3,'271420',50,'Cama Minion','1','10'),(3,'34',49,'Nescau','3','1'),(3,'34',52,'Arroz','2','2'),(3,'34',53,'Pera','7','1'),(3,'34',54,'Pera','3','1'),(3,'34',55,'Quey','3','1'),(3,'34',56,'Quey','10','1'),(3,'34',57,'Quey','2','1'),(3,'34',58,'Quey','1','1'),(3,'34',59,'Quey','1','1'),(3,'35',49,'Nescau 2','4','1'),(3,'35',51,'Nescau 2','6','2'),(3,'35',52,'Feijão','5','4');
+INSERT INTO `historico_compra` VALUES (1,'34',3,'Arroz','2','2'),(1,'35',3,'Feijao','2','2'),(2,'34',4,'Arroz','2','2'),(2,'34',5,'Arroz','4','2'),(2,'35',4,'Feijao','4','10'),(2,'35',5,'Feijao','1','10'),(6,'34',1,'Feijao','6','4'),(6,'34',2,'Feijao','9','4'),(6,'35',1,'Arroz','6','3');
 /*!40000 ALTER TABLE `historico_compra` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -164,7 +164,6 @@ CREATE TABLE `informacoes_empresariais_vendedor` (
 
 LOCK TABLES `informacoes_empresariais_vendedor` WRITE;
 /*!40000 ALTER TABLE `informacoes_empresariais_vendedor` DISABLE KEYS */;
-INSERT INTO `informacoes_empresariais_vendedor` VALUES (2,'10000','','','',0,'',''),(3,'1000000000','5555','33333','Empacotadora',1,'21','26/11/2019'),(6,'30','3715','28944-2','Caixa',1,'25','28/11/2019');
 /*!40000 ALTER TABLE `informacoes_empresariais_vendedor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -186,8 +185,7 @@ CREATE TABLE `informacoes_pdv` (
   `nome_dono_PDV` varchar(45) DEFAULT NULL,
   `nomepdv` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`fk_id_PDV`),
-  KEY `fk_id_PDV_idx` (`fk_id_PDV`),
-  CONSTRAINT `fk_id_PDV` FOREIGN KEY (`fk_id_PDV`) REFERENCES `pdv` (`idPDV`) ON DELETE CASCADE ON UPDATE NO ACTION
+  KEY `fk_id_PDV_idx` (`fk_id_PDV`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -197,7 +195,7 @@ CREATE TABLE `informacoes_pdv` (
 
 LOCK TABLES `informacoes_pdv` WRITE;
 /*!40000 ALTER TABLE `informacoes_pdv` DISABLE KEYS */;
-INSERT INTO `informacoes_pdv` VALUES ('69093086','22','21/04/2001','40','1231248','4562-7847',3,'Douglas Silva de Melo','Galitus');
+INSERT INTO `informacoes_pdv` VALUES ('1231','1','xx/xx/xx/','4','123','4534-2323',1,'default','default'),('0','0','xx/xx/xx/','4','123','4534-2323',2,'Calebe de Almeida','default'),('0','0','xx/xx/xx/','4','123','4534-2323',8,'default','default'),('0','0','xx/xx/xx/','4','123','4534-2323',14,'default','default');
 /*!40000 ALTER TABLE `informacoes_pdv` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -225,7 +223,6 @@ CREATE TABLE `informacoes_vendedor` (
 
 LOCK TABLES `informacoes_vendedor` WRITE;
 /*!40000 ALTER TABLE `informacoes_vendedor` DISABLE KEYS */;
-INSERT INTO `informacoes_vendedor` VALUES ('Rafaela Melo','Masculino','21/04/1999',3),('Douglas Silva de Melo','Masculino','21/04/1999',4),('Fabrizio Honda','Gay','27/03/1999',5),('Jean dos Santos','Outro','17/04/1997',8);
 /*!40000 ALTER TABLE `informacoes_vendedor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -254,7 +251,7 @@ CREATE TABLE `pdv` (
 
 LOCK TABLES `pdv` WRITE;
 /*!40000 ALTER TABLE `pdv` DISABLE KEYS */;
-INSERT INTO `pdv` VALUES (1,1,'pd1@gmail.com',1234,'dono'),(3,1,'pd3@gmail.com',1234,'dono');
+INSERT INTO `pdv` VALUES (1,1,'junio@gmail.com',1234,'dono');
 /*!40000 ALTER TABLE `pdv` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -280,7 +277,7 @@ CREATE TABLE `produto_comprado` (
 
 LOCK TABLES `produto_comprado` WRITE;
 /*!40000 ALTER TABLE `produto_comprado` DISABLE KEYS */;
-INSERT INTO `produto_comprado` VALUES (47,34,'1'),(47,35,'3'),(48,34,'2'),(49,34,'3'),(49,35,'4'),(50,271420,'1'),(51,35,'6'),(52,34,'2'),(52,35,'5'),(53,34,'7'),(54,34,'3'),(55,34,'3'),(56,34,'10'),(57,34,'2'),(58,34,'1'),(59,34,'1');
+INSERT INTO `produto_comprado` VALUES (1,34,'6'),(1,35,'6'),(2,34,'9'),(3,34,'2'),(3,35,'2'),(4,34,'2'),(4,35,'4'),(5,34,'4'),(5,35,'1');
 /*!40000 ALTER TABLE `produto_comprado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -299,8 +296,8 @@ CREATE TABLE `vendedor` (
   `senha` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idVendedor`),
   KEY `fk_id_PDV_pertencente_idx` (`fk_id_PDV_pertencente`),
-  CONSTRAINT `fk_id_PDV_pertencente` FOREIGN KEY (`fk_id_PDV_pertencente`) REFERENCES `pdv` (`idPDV`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_id_PDV_pertencente` FOREIGN KEY (`fk_id_PDV_pertencente`) REFERENCES `pdv` (`idPDV`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -309,7 +306,7 @@ CREATE TABLE `vendedor` (
 
 LOCK TABLES `vendedor` WRITE;
 /*!40000 ALTER TABLE `vendedor` DISABLE KEYS */;
-INSERT INTO `vendedor` VALUES (2,3,'funcionario','juninho@gmail.com','1234'),(3,3,'funcionario','rafaela@gmail.com','123'),(4,1,'funcionario','vendedor6@gmail.com','1234'),(5,3,'funcionario','fabrizio@email.com','321'),(6,3,'funcionario','davyson@gmail.com','1234'),(7,3,'funcionario','queroga@gmail.com','123'),(8,3,'funcionario','jean@gmail.com','123');
+INSERT INTO `vendedor` VALUES (3,1,'funcionario','caique@gmail.com','1234');
 /*!40000 ALTER TABLE `vendedor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -330,4 +327,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-11-30 17:35:05
+-- Dump completed on 2019-12-01 22:02:00
