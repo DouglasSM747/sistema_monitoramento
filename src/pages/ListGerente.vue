@@ -9,7 +9,7 @@
           <h3 class="text-center modal-title">Deseja Excluir o Ponto de Venda?</h3>
         </template>
         <template slot="footer">
-          <base-button type="secondary" v-on:click="deletarPDV()" >Sim, permanentemente</base-button>
+          <base-button type="secondary" v-on:click="deletarPDV()">Sim, permanentemente</base-button>
           <base-button type="secondary" @click="remover_modal = false">Cancelar</base-button>
         </template>
       </modal>
@@ -48,7 +48,7 @@
               ></base-input>
               <div class="text-center">
                 <base-button
-                  v-on:click="cadastrarDono()"
+                  v-on:click="cadastrarDono(DonoEdit)"
                   type="primary"
                   class="my-4"
                 >Cadastrar</base-button>
@@ -66,16 +66,16 @@
 
     <div>
       <!-- Card 1 - Add Donos -->
-      
-        <h4 class="card-title">Adicionar Ponto de Venda</h4>
 
-        <!-- botao para abrir adicao de produto -->
-        <base-button
-          class="animation-on-hover"
-          @click="Adicionar_modal= true"
-          type="success"
-        >Cadastrar Ponto de Venda</base-button>
-      
+      <h4 class="card-title">Adicionar Ponto de Venda</h4>
+
+      <!-- botao para abrir adicao de produto -->
+      <base-button
+        class="animation-on-hover"
+        @click="Adicionar_modal= true"
+        type="success"
+      >Cadastrar Ponto de Venda</base-button>
+
       <base-table :data="tableData" :columns="columns">
         <template slot="columns">
           <th class="text-center">Id Ponto de Venda</th>
@@ -88,8 +88,13 @@
           <td class="text-center">{{row.fk_gerentePDV}}</td>
           <td class="text-center">{{row.email}}</td>
           <td class="td-actions text-center">
-            <base-button type="info" size="sm" icon v-on:click="abrirModal(row.idPDV,row.fk_gerentePDV)">
-              <i  class=" text-center tim-icons icon-simple-remove"></i>
+            <base-button
+              type="info"
+              size="sm"
+              icon
+              v-on:click="abrirModal(row.idPDV,row.fk_gerentePDV)"
+            >
+              <i class="text-center tim-icons icon-simple-remove"></i>
             </base-button>
           </td>
         </template>
@@ -103,7 +108,7 @@ import axios from "axios";
 
 import swal from "sweetalert2";
 
-import { Modal } from "/home/douglas/Documentos/sistema_monitoramento/src/components";
+import { Modal } from "/home/douglas/Downloads/vue-black-dashboard-master/src/components";
 
 const Swal = require("sweetalert2");
 
@@ -120,75 +125,79 @@ export default {
       remover_modal: false,
       columns: ["id", "name", "job", "since", "excluir"],
       tableData: [],
-      DonoEdit: { idPDV: '',email: "", senha: "", tipo: "dono"},
+      DonoEdit: { idPDV: "", email: "", senha: "", tipo: "dono" }
     };
   },
   mounted() {
-    var self = this;
-    //puxa todos os funcionarios do ponto de venda atual
-    axios
-      .get("http://localhost:5000/donos/get?idpdv=" + window.localStorage.getItem("ID_GERENTE")) // get na API para mostrar todas os pdv
-      .then(function(response) {
-        for (var i = 0; i < response.data.response.length; i++) {
+    this.getDonos(window.localStorage.getItem("ID_GERENTE"));
+  },
+  methods: {
+    getDonos(pdv) {
+      var self = this;
+      //puxa todos os funcionarios do ponto de venda atual
+      axios
+        .get("http://localhost:5000/donos/get?idpdv=" + pdv) // get na API para mostrar todas os pdv
+        .then(function(response) {
+          for (var i = 0; i < response.data.response.length; i++) {
             self.tableData.push({
               SAT: response.data.response[i].SAT,
               email: response.data.response[i].email,
               fk_gerentePDV: response.data.response[i].fk_gerentePDV,
               idPDV: response.data.response[i].idPDV
             });
-        }
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-  },
-  methods: {
-    cadastrarDono(){
-        var existe = false;
-        for(var i = 0; i < this.tableData.length;i++){
-          if(this.DonoEdit.idPDV == this.tableData[i].idPDV){
-            existe = true;
-            break;
           }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    cadastrarDono(DonoEdit) {
+      var existe = false;
+      for (var i = 0; i < this.tableData.length; i++) {
+        if (this.DonoEdit.idPDV == this.tableData[i].idPDV) {
+          existe = true;
+          break;
         }
-        if(existe){
-            Swal.fire({
-              title: "Codigo já existe no Sistema",
-              confirmButtonText: "Ok"
-            });
-        }else{
-          axios.post("http://localhost:5000/cadastrar/dono", {
+      }
+      if (existe) {
+        Swal.fire({
+          title: "Codigo já existe no Sistema",
+          confirmButtonText: "Ok"
+        });
+      } else {
+        axios
+          .post("http://localhost:5000/cadastrar/dono", {
             // Passa a informacoes do funcionario
             idPDV: this.DonoEdit.idPDV,
-            tipo: 'dono',
+            tipo: "dono",
             email: this.DonoEdit.email,
             senha: this.DonoEdit.senha,
             fk_gerentePDV: window.localStorage.getItem("ID_GERENTE")
           })
           .then(function(response) {
-          location.reload();
+            location.reload();
           })
           .catch(function(error) {
             console.log(error);
           });
-        }
-
+      }
     },
-    deletarPDV(){
+    deletarPDV() {
       console.log("OI");
-      axios.post("http://localhost:5000/deletar/dono", {
-        // Passa a informacoes do funcionario
-        idPDV: this.idPDV_remove,
-        fk_gerentePDV: window.localStorage.getItem("ID_GERENTE")
-      })
-      .then(function(response) {
-      location.reload();
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+      axios
+        .post("http://localhost:5000/deletar/dono", {
+          // Passa a informacoes do funcionario
+          idPDV: this.idPDV_remove,
+          fk_gerentePDV: window.localStorage.getItem("ID_GERENTE")
+        })
+        .then(function(response) {
+          location.reload();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
-    abrirModal(idpdv){
+    abrirModal(idpdv) {
       this.remover_modal = true;
       this.idPDV_remove = idpdv;
     }

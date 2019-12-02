@@ -23,7 +23,7 @@ FilialDAO.prototype.cadastrarFuncionario = function(params,callback) {
 };
 //Cadastrar Dono
 FilialDAO.prototype.cadastrarDono = function(params,callback) {
-	this._connection.query('INSERT INTO pdv SET ?',params, callback);
+	this._connection.query('INSERT INTO pdv SET ?; INSERT INTO informacoes_pdv VALUES("0","0","xx/xx/xx/","4","123","4534-2323",' +params.idPDV+',"default","default")',params, callback);
 };
 //Deletar Dono
 FilialDAO.prototype.deletarDono = function(params,callback) {
